@@ -3,111 +3,378 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Da Hood Codes — QR Engine</title>
+<title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
 
+<!-- FONT -->
 <style>
+  @font-face {
+    font-family: "PlanetKosmos";
+    src: url("KOSMOS.ttf") format("truetype");
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
-    background: #000;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #050816 0%, #02030a 40%, #000000 100%);
+    color: #e8faff;
+    font-family: system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* FLOATING EMOJI */
+  .float-emoji {
+    position: fixed;
+    font-size: 32px;
+    opacity: 0.35;
+    animation: floatUp 18s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-120vh) rotate(360deg); }
+  }
+
+  /* MAIN WRAPPER */
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
     padding: 20px;
   }
 
-  .container {
-    max-width: 900px;
-    width: 100%;
+  /* CARD */
+  .card {
+    background: rgba(10, 14, 30, 0.85);
+    border: 1px solid rgba(120, 255, 200, 0.35);
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow:
+      0 0 40px rgba(0, 255, 200, 0.15),
+      0 0 80px rgba(255, 0, 180, 0.15);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 26px;
   }
 
-  h1 {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 10px;
+  @media (max-width: 900px) {
+    .card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* TITLES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(120, 255, 200, 0.1);
+    border: 1px solid rgba(120, 255, 200, 0.4);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #78ffc8;
+    margin-bottom: 12px;
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #78ffc8;
+    box-shadow: 0 0 10px #78ffc8;
+  }
+
+  .title-main {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 34px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 6px;
+  }
+
+  .title-sub {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #9ae6ff;
+    opacity: 0.9;
+    margin-bottom: 20px;
+  }
+
+  /* INPUTS */
+  textarea, input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(120, 255, 200, 0.3);
+    background: rgba(0, 0, 0, 0.35);
+    color: #e8faff;
+    font-size: 14px;
+    margin-bottom: 12px;
   }
 
   textarea {
-    width: 100%;
-    height: 80px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    margin-bottom: 10px;
-    font-size: 14px;
+    height: 110px;
+    resize: none;
   }
 
-  button {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    margin-right: 6px;
+  /* PRESETS */
+  .preset-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .preset-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(120, 255, 200, 0.4);
+    background: rgba(120, 255, 200, 0.08);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
   }
 
-  #qrcode {
-    margin-top: 20px;
+  .preset-pill.active {
+    background: rgba(120, 255, 200, 0.25);
+    border-color: rgba(120, 255, 200, 0.8);
+  }
+
+  .preset-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #78ffc8;
+    box-shadow: 0 0 10px #78ffc8;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
+    border: none;
+    color: #000;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(120, 255, 200, 0.4);
+    color: #e8faff;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  /* EXPORT BAR */
+  .export-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .export-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(120, 255, 200, 0.4);
+    background: rgba(120, 255, 200, 0.1);
+    color: #e8faff;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  /* RIGHT SIDE */
+  .qr-frame {
     background: #fff;
-    padding: 10px;
+    padding: 14px;
+    border-radius: 14px;
     display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #78ffc8;
+    opacity: 0.8;
+    text-align: center;
+  }
+
+  /* DONATE STRIP */
+  .donate-strip {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255, 0, 180, 0.12);
+    border: 1px solid rgba(255, 0, 180, 0.4);
+    text-align: center;
+  }
+
+  .donate-btn {
+    margin-top: 10px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
   }
 </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-
 <body>
-<div class="container">
 
-  <h1>Da Hood Codes — QR Engine</h1>
+<!-- FLOATING EMOJI GENERATOR -->
+<script>
+  const emojis = ["🛸","👽","✨","🌌","🪐","💫","🌠","🚀","🐙"];
+  for (let i = 0; i < 22; i++) {
+    const e = document.createElement("div");
+    e.className = "float-emoji";
+    e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    e.style.left = Math.random() * 100 + "vw";
+    e.style.animationDelay = Math.random() * 12 + "s";
+    e.style.fontSize = 24 + Math.random() * 32 + "px";
+    document.body.appendChild(e);
+  }
+</script>
 
-  <textarea id="qrText">https://dahoodcodes.com</textarea>
+<div class="wrapper">
+  <div class="card">
 
-  <br>
+    <!-- LEFT SIDE -->
+    <div>
+      <div class="badge">
+        <div class="badge-dot"></div>
+        Xenomorph QR Engine v3.0
+      </div>
 
-  <button onclick="generateQR()">Generate</button>
-  <button onclick="resetQR()">Reset</button>
-  <button onclick="downloadPNG()">Download PNG</button>
+      <div class="title-main">Da Hood Codes</div>
+      <div class="title-sub">Astronauts Cosmic Edition</div>
 
-  <div id="qrcode"></div>
+      <label>Sadržaj QR koda</label>
+      <textarea id="qrText">https://dahoodcodes.com</textarea>
 
-</div>
+      <div class="preset-bar">
+        <div class="preset-pill active" data-type="url"><div class="preset-dot"></div>URL</div>
+        <div class="preset-pill" data-type="wifi"><div class="preset-dot"></div>WiFi</div>
+        <div class="preset-pill" data-type="email"><div class="preset-dot"></div>Email</div>
+        <div class="preset-pill" data-type="sms"><div class="preset-dot"></div>SMS</div>
+        <div class="preset-pill" data-type="crypto"><div class="preset-dot"></div>Crypto</div>
+        <div class="preset-pill" data-type="event"><div class="preset-dot"></div>Event</div>
+      </div>
+
+      <label>Veličina (px)</label>
+      <input type="number" id="qrSize" value="512" min="128" max="2048" step="32">
+
+      <label>Margin</label>
+      <input type="number" id="qrMargin" value="2" min="0" max="16">
+
+      <label>Error level</label>
+      <select id="qrLevel">
+        <option value="L">L</option>
+        <option value="M">M</option>
+        <option value="Q">Q</option>
+        <option value="H" selected>H</option>
+      </select>
+
+      <button class="btn-primary" id="btnGenerate">⚡ Generate / Refresh</button>
+<!-- QRCode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
+function getErrorLevel(level) {
+  switch (level) {
+    case "L": return QRCode.CorrectLevel.L;
+    case "M": return QRCode.CorrectLevel.M;
+    case "Q": return QRCode.CorrectLevel.Q;
+    case "H":
+    default: return QRCode.CorrectLevel.H;
+  }
+}
+
+function fixEncoding(str) {
+  try { return decodeURIComponent(escape(str)); }
+  catch { return str; }
+}
+
 let qr;
 
 function generateQR() {
-  const text = document.getElementById("qrText").value;
-  const box = document.getElementById("qrcode");
-  box.innerHTML = "";
+  const text = document.getElementById("qrText").value || "";
+  const size = parseInt(document.getElementById("qrSize").value, 10) || 512;
+  const margin = parseInt(document.getElementById("qrMargin").value, 10) || 2;
+  const level = document.getElementById("qrLevel").value;
 
-  qr = new QRCode(box, {
-    text: text,
-    width: 256,
-    height: 256,
-    correctLevel: QRCode.CorrectLevel.H
+  const container = document.getElementById("qrcode");
+  container.innerHTML = "";
+
+  qr = new QRCode(container, {
+    text: fixEncoding(text),
+    width: size,
+    height: size,
+    correctLevel: getErrorLevel(level),
+    margin: margin
   });
 }
 
-function resetQR() {
-  document.getElementById("qrText").value = "https://dahoodcodes.com";
-  generateQR();
-}
+function downloadImage(format) {
+  if (!qr) return;
 
-function downloadPNG() {
   const canvas = document.querySelector("#qrcode canvas");
-  if (!canvas) return;
+  const img = document.querySelector("#qrcode img");
+  let dataURL = null;
 
-  const link = document.createElement("a");
-  link.download = "qr.png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
+  if (canvas && (format === "png" || format === "jpg")) {
+    const mime = format === "jpg" ? "image/jpeg" : "image/png";
+    dataURL = canvas.toDataURL(mime);
+  } else if (img && format === "png") {
+    dataURL = img.src;
+  }
+
+  if (!dataURL) return;
+
+  const a = document.createElement("a");
+  a.href = dataURL;
+  a.download = "da-hood-astronauts-qr." + format;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
-generateQR();
-</script>
+function copyImage() {
+  const canvas = document.querySelector("#qrcode canvas");
+  if (!canvas || !navigator.clipboard || !navigator.clipboard.write) return;
 
-</body>
-</html>
+  canvas.toBlob(async (blob) => {
+    try {
+      const item = new ClipboardItem({ "image/png": blob });
+      await navigator
