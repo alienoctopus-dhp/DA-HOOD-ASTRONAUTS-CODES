@@ -252,7 +252,10 @@
     </div>
 
     <div class="footer">
-      Xenomorph QR Engine v3.0 • Da Hood Astronaut
+      Xenomorph QR Engine v3.0 • Da Hood Astronauts edition
+    </div>
+  </div>
+
       <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -298,4 +301,114 @@
     function downloadImage(format) {
       if (!qr) return;
       const canvas = document.querySelector("#qrcode canvas");
-      const img = document
+      const img = document.querySelector("#qrcode img");
+
+      let dataURL = null;
+
+      if (canvas && (format === "png" || format === "jpg")) {
+        const mime = format === "jpg" ? "image/jpeg" : "image/png";
+        dataURL = canvas.toDataURL(mime);
+      } else if (img && format === "png") {
+        dataURL = img.src;
+      }
+
+      if (!dataURL) return;
+
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "da-hood-astronauts-qr." + format;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function copyImage() {
+      const canvas = document.querySelector("#qrcode canvas");
+      if (!canvas || !navigator.clipboard || !navigator.clipboard.write) return;
+
+      canvas.toBlob(async (blob) => {
+        try {
+          const item = new ClipboardItem({ "image/png": blob });
+          await navigator.clipboard.write([item]);
+        } catch (e) {
+          console.log("Clipboard copy failed", e);
+        }
+      });
+    }
+
+    function printQR() {
+      const canvas = document.querySelector("#qrcode canvas");
+      const img = document.querySelector("#qrcode img");
+      let dataURL = null;
+
+      if (canvas) dataURL = canvas.toDataURL("image/png");
+      else if (img) dataURL = img.src;
+      if (!dataURL) return;
+
+      const w = window.open("", "_blank");
+      if (!w) return;
+      w.document.write(
+        "<!DOCTYPE html><html><head><title>Print QR</title></head><body style='margin:0;display:flex;align-items:center;justify-content:center;'><img src='" +
+          dataURL +
+          "' style='max-width:100%;max-height:100%;'/></body></html>"
+      );
+      w.document.close();
+      w.focus();
+      w.print();
+    }
+
+    function resetDefaults() {
+      document.getElementById("qrText").value = "https://dahoodcodes.com";
+      document.getElementById("qrSize").value = 512;
+      document.getElementById("qrMargin").value = 2;
+      document.getElementById("qrLevel").value = "H";
+      setActivePreset("url");
+      generateQR();
+    }
+
+    function setActivePreset(type) {
+      document.querySelectorAll(".preset-pill").forEach((el) => {
+        el.classList.toggle("active", el.dataset.type === type);
+      });
+
+      const textArea = document.getElementById("qrText");
+
+      if (type === "url" && !textArea.value) {
+        textArea.value = "https://dahoodcodes.com";
+      } else if (type === "wifi") {
+        textArea.value = "WIFI:T:WPA;S:DaHoodWiFi;P:lozinka123;;";
+      } else if (type === "email") {
+        textArea.value = "mailto:crew@dahoodcodes.com?subject=Da%20Hood%20Codes";
+      } else if (type === "sms") {
+        textArea.value = "sms:+385911234567?body=Da%20Hood%20Codes";
+      } else if (type === "crypto") {
+        textArea.value = "bitcoin:bc1qexamplewallet?amount=0.01";
+      } else if (type === "event") {
+        textArea.value = "BEGIN:VEVENT\nSUMMARY:Da Hood Astronauts Gathering\nLOCATION:Kosmos\nEND:VEVENT";
+      }
+
+      generateQR();
+    }
+
+    document.getElementById("btnGenerate").addEventListener("click", generateQR);
+    document.getElementById("btnReset").addEventListener("click", resetDefaults);
+
+    document.querySelectorAll(".preset-pill").forEach((el) => {
+      el.addEventListener("click", () => setActivePreset(el.dataset.type));
+    });
+
+    document.querySelectorAll(".export-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const format = btn.dataset.format;
+        if (format === "png" || format === "jpg") downloadImage(format);
+        else if (format === "copy") copyImage();
+        else if (format === "print") printQR();
+      });
+    });
+
+    document.getElementById("qrText").addEventListener("input", generateQR);
+
+    resetDefaults();
+  </script>
+</body>
+</html>
