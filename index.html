@@ -1,405 +1,263 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-    <meta charset="UTF-8">
-    <title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- PLANET KOSMOS / KOSMOS FONT (lokalni fajl, isti folder kao index.html) -->
-    <style>
-        @font-face {
-            font-family: 'PlanetKosmos';
-            src: url('KOSMOS.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: radial-gradient(circle at top, #1b1b2f 0, #050509 55%, #000000 100%);
-            color: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wrapper {
-            width: 100%;
-            max-width: 1100px;
-            padding: 20px;
-        }
-
-        .card {
-            background: rgba(10, 10, 20, 0.95);
-            border-radius: 18px;
-            border: 1px solid rgba(120, 255, 200, 0.25);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            padding: 24px;
-            display: grid;
-            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-            gap: 24px;
-        }
-
-        @media (max-width: 800px) {
-            .card {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .title {
-            font-family: 'PlanetKosmos', system-ui, sans-serif;
-            font-size: 26px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-family: 'PlanetKosmos', system-ui, sans-serif;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.22em;
-            color: #9ae6ff;
-            margin-bottom: 18px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: rgba(120, 255, 200, 0.08);
-            border: 1px solid rgba(120, 255, 200, 0.4);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: #78ffc8;
-            margin-bottom: 16px;
-        }
-
-        .badge-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #78ffc8;
-            box-shadow: 0 0 10px #78ffc8;
-        }
-
-        label {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #b0b0c8;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            resize: vertical;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(5, 5, 15, 0.9);
-            color: #f5f5f5;
-            padding: 10px 12px;
-            font-size: 14px;
-            line-height: 1.5;
-            outline: none;
-        }
-
-        textarea:focus {
-            border-color: #78ffc8;
-            box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 12px;
-            margin-bottom: 12px;
-        }
-
-        .row > div {
-            flex: 1 1 120px;
-        }
-
-        input[type="number"],
-        select {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(5, 5, 15, 0.9);
-            color: #f5f5f5;
-            padding: 7px 10px;
-            font-size: 13px;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #78ffc8;
-            box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
-        }
-
-        .hint {
-            font-size: 11px;
-            color: #8f9bb8;
-            margin-top: 4px;
-        }
-
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        button {
-            border-radius: 999px;
-            border: none;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #78ffc8, #2af5ff);
-            color: #020308;
-            box-shadow: 0 0 18px rgba(120, 255, 200, 0.5);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: #e0e0ff;
-        }
-
-        .btn-primary:active,
-        .btn-secondary:active {
-            transform: translateY(1px);
-            box-shadow: none;
-        }
-
-        .right {
-            border-radius: 14px;
-            border: 1px solid rgba(120, 255, 200, 0.35);
-            background: radial-gradient(circle at top, #101528 0, #050509 60%, #000000 100%);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qr-wrapper {
-            width: 100%;
-            max-width: 320px;
-            aspect-ratio: 1 / 1;
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #qrcode {
-            width: 100%;
-            height: 100%;
-        }
-
-        .qr-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: #9ae6ff;
-        }
-
-        .brand {
-            font-family: 'PlanetKosmos', system-ui, sans-serif;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.22em;
-            color: #6bffcf;
-            opacity: 0.9;
-        }
-
-        .brand span {
-            color: #fffb8a;
-        }
-
-        .footer {
-            margin-top: 10px;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: #6f7a9a;
-            text-align: center;
-        }
-    </style>
-
-    <!-- QRCode.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body>
-<div class="wrapper">
-    <div class="card">
-        <!-- LEFT SIDE -->
-        <div>
-            <div class="badge">
-                <div class="badge-dot"></div>
-                Xenomorph QR Engine v3.0
-            </div>
-            <div class="title">Da Hood Codes</div>
-            <div class="subtitle">Podrži Da Hood Astronauts misiju</div>
-
-            <label for="qrText">Sadržaj QR koda</label>
-            <textarea id="qrText">Podrži Da Hood Astronauts misiju</textarea>
-            <div class="hint">
-                Tekst, URL, poruka, koordinata, mantra… UTF‑8 safe (šđčćž rade normalno).
-            </div>
-
-            <div class="row">
-                <div>
-                    <label for="qrSize">Veličina (px)</label>
-                    <input type="number" id="qrSize" value="512" min="128" max="2048" step="32">
-                </div>
-                <div>
-                    <label for="qrMargin">Margin</label>
-                    <input type="number" id="qrMargin" value="2" min="0" max="16">
-                </div>
-                <div>
-                    <label for="qrLevel">Error level</label>
-                    <select id="qrLevel">
-                        <option value="L">L</option>
-                        <option value="M">M</option>
-                        <option value="Q">Q</option>
-                        <option value="H" selected>H</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="buttons">
-                <button class="btn-primary" id="btnGenerate">
-                    ⚡ Generate / Refresh
-                </button>
-                <button class="btn-secondary" id="btnDownload">
-                    ⬇ Download PNG
-                </button>
-                <button class="btn-secondary" id="btnReset">
-                    ♻ Reset
-                </button>
-            </div>
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div class="right">
-            <div class="qr-label">Live QR preview</div>
-            <div class="qr-wrapper">
-                <div id="qrcode"></div>
-            </div>
-            <div class="brand">
-                DA HOOD <span>ASTRONAUTS</span> • CODES
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        Xenomorph QR Engine v3.0 • UTF‑8 • No Cyrillic • Da Hood Astronauts edition
-    </div>
-</div>
-
-<script>
-    function getErrorLevel(level) {
-        switch (level) {
-            case 'L': return QRCode.CorrectLevel.L;
-            case 'M': return QRCode.CorrectLevel.M;
-            case 'Q': return QRCode.CorrectLevel.Q;
-            case 'H':
-            default:  return QRCode.CorrectLevel.H;
-        }
+  <!-- PLANET KOSMOS font (stavi KOSMOS.ttf u isti folder ako želiš pravi font) -->
+  <style>
+    @font-face {
+      font-family: "PlanetKosmos";
+      src: url("KOSMOS.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
     }
 
-    // UTF‑8 fix (šđčćž)
-    function fixEncoding(str) {
-        try {
-            return decodeURIComponent(escape(str));
-        } catch (e) {
-            return str;
-        }
+    * {
+      box-sizing: border-box;
     }
 
-    let qr;
-
-    function generateQR() {
-        const text = document.getElementById('qrText').value || '';
-        const size = parseInt(document.getElementById('qrSize').value, 10) || 512;
-        const margin = parseInt(document.getElementById('qrMargin').value, 10) || 2;
-        const level = document.getElementById('qrLevel').value;
-
-        const container = document.getElementById('qrcode');
-        container.innerHTML = '';
-
-        qr = new QRCode(container, {
-            text: fixEncoding(text),
-            width: size,
-            height: size,
-            correctLevel: getErrorLevel(level),
-            margin: margin
-        });
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #050816 0, #02030a 40%, #000000 100%);
+      color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    function downloadPNG() {
-        if (!qr) return;
-
-        const img = document.querySelector('#qrcode img') || document.querySelector('#qrcode canvas');
-        if (!img) return;
-
-        let dataURL;
-        if (img.tagName.toLowerCase() === 'img') {
-            dataURL = img.src;
-        } else {
-            dataURL = img.toDataURL('image/png');
-        }
-
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'da-hood-astronauts-qr.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    .bg-stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(120, 255, 200, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 80% 10%, rgba(255, 0, 180, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 50% 90%, rgba(0, 180, 255, 0.18) 0, transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      z-index: 0;
     }
 
-    function resetDefaults() {
-        document.getElementById('qrText').value = 'Podrži Da Hood Astronauts misiju';
-        document.getElementById('qrSize').value = 512;
-        document.getElementById('qrMargin').value = 2;
-        document.getElementById('qrLevel').value = 'H';
-        generateQR();
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1100px;
+      padding: 20px;
     }
 
-    document.getElementById('btnGenerate').addEventListener('click', generateQR);
-    document.getElementById('btnDownload').addEventListener('click', downloadPNG);
-    document.getElementById('btnReset').addEventListener('click', resetDefaults);
+    .card {
+      background: radial-gradient(circle at top left, #0b1020 0, #050712 40%, #020308 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(120, 255, 200, 0.35);
+      box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 60px rgba(120, 255, 200, 0.25);
+      padding: 22px 24px 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
 
-    document.getElementById('qrText').addEventListener('input', generateQR);
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 0, 180, 0.12) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(0, 200, 255, 0.12) 0, transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
 
-    generateQR();
-</script>
-</body>
-</html>
+    .card-inner {
+      position: relative;
+      z-index: 1;
+      display: contents;
+    }
+
+    @media (max-width: 900px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .title-block {
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(120, 255, 200, 0.08);
+      border: 1px solid rgba(120, 255, 200, 0.5);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #78ffc8;
+      margin-bottom: 10px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #78ffc8;
+      box-shadow: 0 0 10px #78ffc8;
+    }
+
+    .title-main {
+      font-family: "PlanetKosmos", system-ui, sans-serif;
+      font-size: 32px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .title-sub {
+      font-family: "PlanetKosmos", system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9ae6ff;
+      opacity: 0.9;
+    }
+
+    .ribbon {
+      margin-top: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #e5ffe9;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ribbon span {
+      color: #78ffc8;
+    }
+
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #b0b0c8;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(3, 5, 15, 0.9);
+      color: #f5f5f5;
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #78ffc8;
+      box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #8f9bb8;
+      margin-top: 4px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+      margin-bottom: 10px;
+    }
+
+    .row > div {
+      flex: 1 1 120px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(3, 5, 15, 0.9);
+      color: #f5f5f5;
+      padding: 7px 10px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #78ffc8;
+      box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    .preset-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(5, 7, 18, 0.9);
+      padding: 5px 11px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #d0d0ff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-pill.active {
+      border-color: rgba(120, 255, 200, 0.9);
+      background: radial-gradient(circle at top, rgba(120, 255, 200, 0.25), rgba(5, 7, 18, 0.9));
+      color: #78ffc8;
+    }
+
+    .preset-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .buttons-main {
+      display: flex;
+      flex-wrap
