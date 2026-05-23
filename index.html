@@ -1,599 +1,103 @@
-
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#03000f;--bg2:#07011a;--panel:rgba(0,229,255,0.04);--border:rgba(0,229,255,0.18);--border2:rgba(191,0,255,0.25);--cyan:#00e5ff;--purple:#bf00ff;--pink:#ff006e;--green:#00ff88;--orange:#ff9500;--text:#c8e6ff;--text2:rgba(200,230,255,0.5);--text3:rgba(200,230,255,0.28);--mono:'Share Tech Mono','Courier New',monospace;--display:'Orbitron','Share Tech Mono',monospace;}
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(0,229,255,0.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(191,0,255,0.07) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 50% 50%,rgba(0,255,136,0.03) 0%,transparent 70%);pointer-events:none;z-index:0;}
-.stars-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.star{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(--dur,3s) ease-in-out infinite;animation-delay:var(--del,0s);}
-@keyframes starTwinkle{0%,100%{opacity:var(--op1,0.1);transform:scale(1)}50%{opacity:var(--op2,0.6);transform:scale(1.3)}}
-.astro-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
-.astro{position:absolute;font-size:var(--fsz,1.2rem);animation:astroFloat var(--fdur,12s) linear infinite;animation-delay:var(--fdel,0s);opacity:0;}
-@keyframes astroFloat{0%{transform:translate(0,110vh) rotate(var(--rot0,0deg));opacity:0;}5%{opacity:var(--aop,0.7);}90%{opacity:var(--aop,0.7);}100%{transform:translate(var(--dx,20px),calc(-120vh)) rotate(var(--rot1,360deg));opacity:0;}}
-.smoke-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
-.smoke{position:absolute;border-radius:50%;animation:smokeDrift var(--sdur,8s) ease-in-out infinite;animation-delay:var(--sdel,0s);opacity:0;}
-@keyframes smokeDrift{0%{opacity:0;transform:translate(0,0) scale(0.5);}20%{opacity:var(--sop,0.15);}80%{opacity:var(--sop,0.15);}100%{opacity:0;transform:translate(var(--stx,20px),var(--sty,-60px)) scale(2.5);}}
-.app{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:0 0 0;}
-.header{text-align:center;padding:3rem 1.5rem 1.5rem;}
-.glyph-row{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:1rem;opacity:0.4;font-size:0.6rem;letter-spacing:0.4em;color:var(--cyan);}
-.glyph-row span{animation:glyphBlink 3s ease infinite;}
-.glyph-row span:nth-child(2){animation-delay:.5s}.glyph-row span:nth-child(3){animation-delay:1s}.glyph-row span:nth-child(4){animation-delay:1.5s}.glyph-row span:nth-child(5){animation-delay:2s}
-@keyframes glyphBlink{0%,100%{opacity:1}50%{opacity:0.15}}
-.brand-title{font-family:var(--display);font-size:clamp(2rem,8vw,5rem);font-weight:900;letter-spacing:.15em;text-transform:uppercase;line-height:1;background:linear-gradient(90deg,#00ff88 0%,#00e5ff 15%,#bf00ff 35%,#ff006e 55%,#ff9500 75%,#00e5ff 90%,#00ff88 100%);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleFlow 6s linear infinite;filter:drop-shadow(0 0 25px rgba(0,229,255,0.35));}
-@keyframes titleFlow{0%{background-position:0% center}100%{background-position:300% center}}
-.brand-tagline{margin-top:.6rem;font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:12px;}
-.brand-tagline::before,.brand-tagline::after{content:'';display:block;width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan));}.brand-tagline::after{background:linear-gradient(90deg,var(--cyan),transparent);}
-.free-badge{display:inline-block;margin-top:.9rem;padding:4px 16px;border:1px solid rgba(0,255,136,.4);border-radius:20px;font-size:.62rem;letter-spacing:.18em;color:var(--green);background:rgba(0,255,136,.07);animation:badgePulse 3s ease infinite;}
-@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}50%{box-shadow:0 0 14px 2px rgba(0,255,136,.2)}}
-.main-layout{display:grid;grid-template-columns:1fr 290px;gap:0;padding:0 1.5rem;}
-@media(max-width:760px){.main-layout{grid-template-columns:1fr;}}
-.tabs-row{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:12px;flex-wrap:wrap;}
-.tabs-row::-webkit-scrollbar{display:none;}
-.tab-btn{flex-shrink:0;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .18s;letter-spacing:.05em;}
-.tab-btn.active{border-color:var(--cyan);background:rgba(0,229,255,.1);color:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.15);}
-.tab-btn:hover:not(.active){border-color:rgba(0,229,255,.4);color:var(--text);}
-.panel{display:none;}.panel.active{display:block;}
-.sec-label{font-size:.58rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(0,229,255,.45);margin:.85rem 0 .4rem;}
-.chip-grid{display:grid;gap:5px;}.g3{grid-template-columns:repeat(3,1fr);}.g4{grid-template-columns:repeat(4,1fr);}
-.chip{padding:7px 4px;border-radius:7px;border:1px solid var(--border);background:var(--panel);color:var(--text2);font-size:.6rem;font-family:var(--mono);cursor:pointer;text-align:center;transition:all .16s;line-height:1.4;}
-.chip .ci{font-size:1rem;display:block;margin-bottom:2px;}
-.chip.active{border-color:var(--purple);background:rgba(191,0,255,.14);color:#df80ff;box-shadow:0 0 8px rgba(191,0,255,.2);}
-.chip:hover:not(.active){border-color:rgba(0,229,255,.45);color:var(--text);}
-.url-input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,229,255,.04);color:var(--text);font-size:.85rem;font-family:var(--mono);outline:none;transition:all .2s;}
-.url-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.1);}
-.url-input::placeholder{color:var(--text3);}
-.input-row{display:flex;gap:6px;margin-bottom:4px;}.input-row .url-input{flex:1;}
-.gen-btn{padding:9px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;font-size:.76rem;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.06em;transition:transform .15s,opacity .15s,box-shadow .15s;white-space:nowrap;box-shadow:0 0 15px rgba(0,229,255,.2);}
-.gen-btn:hover{opacity:.88;transform:scale(.98);}
-.opt-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
-.opt-card label{font-size:.6rem;color:var(--text2);display:block;margin-bottom:4px;}
-.opt-card select,.opt-card input[type=range]{width:100%;font-size:.75rem;}
-.opt-card select{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-family:var(--mono);cursor:pointer;}
-.opt-card input[type=color]{width:100%;height:30px;border-radius:5px;border:1px solid var(--border);padding:2px;cursor:pointer;background:transparent;}
-.opt-card input[type=range]{accent-color:var(--cyan);}
-.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.full-opt{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:6px;}
-.full-opt label{font-size:.6rem;color:var(--text2);display:block;margin-bottom:4px;}
-.full-opt select{width:100%;font-size:.75rem;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-family:var(--mono);cursor:pointer;}
-.full-opt input[type=range]{width:100%;accent-color:var(--cyan);}
-.right-col{padding-left:18px;display:flex;flex-direction:column;align-items:center;position:sticky;top:20px;align-self:start;}
-@media(max-width:760px){.right-col{padding-left:0;margin-top:1.5rem;}}
-.preview-frame-wrap{position:relative;border-radius:14px;padding:3px;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));box-shadow:0 0 40px rgba(0,229,255,.2),0 0 80px rgba(191,0,255,.1);animation:framePulse 4s ease infinite;}
-@keyframes framePulse{0%,100%{box-shadow:0 0 30px rgba(0,229,255,.2),0 0 60px rgba(191,0,255,.1)}50%{box-shadow:0 0 55px rgba(0,229,255,.45),0 0 110px rgba(191,0,255,.25)}}
-.qr-frame{border-radius:12px;overflow:hidden;position:relative;background:var(--bg);}
-#qr-canvas,#fx-canvas{display:block;}#fx-canvas{position:absolute;top:0;left:0;pointer-events:none;border-radius:12px;}
-.dl-section{margin-top:12px;width:100%;}
-.dl-section p{font-size:.58rem;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;text-align:center;}
-.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
-.dl-btn{padding:7px 6px;border-radius:7px;border:1px solid var(--border);background:var(--panel);color:var(--text2);font-size:.65rem;font-family:var(--mono);cursor:pointer;transition:all .18s;text-align:center;}
-.dl-btn:hover{background:rgba(0,229,255,.1);color:var(--cyan);border-color:rgba(0,229,255,.4);}
-.dl-btn.prim{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.08);}
-.palette-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
-.pal-swatch{width:26px;height:26px;border-radius:5px;border:2px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0;}
-.pal-swatch:hover{border-color:#fff;transform:scale(1.18);}
-.grad-preview{height:30px;border-radius:7px;margin:6px 0;border:1px solid var(--border);}
-.color-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px;}
-.cp-btn{height:40px;border-radius:8px;border:1.5px solid rgba(255,255,255,.12);cursor:pointer;font-size:.6rem;font-weight:700;font-family:var(--mono);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);transition:all .18s;display:flex;align-items:center;justify-content:center;}
-.cp-btn:hover{border-color:#fff;transform:scale(1.04);}
-.donate-bar{margin:1.5rem 1.5rem 0;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,rgba(191,0,255,.07),rgba(0,229,255,.07));border:1px solid rgba(191,0,255,.3);display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
-.donate-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(191,0,255,.07),transparent);animation:barSweep 5s linear infinite;}
-@keyframes barSweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.donate-bar .de{font-size:1.8rem;flex-shrink:0;}.donate-bar .dt{flex:1;position:relative;}
-.donate-bar .dt strong{display:block;color:var(--text);font-size:.82rem;margin-bottom:2px;}.donate-bar .dt span{font-size:.68rem;color:var(--text2);}
-.donate-btn{padding:8px 16px;border-radius:20px;border:none;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-size:.7rem;font-weight:700;font-family:var(--mono);cursor:pointer;flex-shrink:0;transition:transform .15s,box-shadow .15s;box-shadow:0 0 15px rgba(191,0,255,.3);}
-.donate-btn:hover{transform:scale(1.04);box-shadow:0 0 25px rgba(191,0,255,.5);}
-.mastermind-footer{margin:2.5rem 0 0;padding:3rem 1.5rem 2.5rem;position:relative;text-align:center;border-top:1px solid rgba(0,229,255,.12);overflow:hidden;}
-.mastermind-footer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(191,0,255,.1) 0%,transparent 70%);pointer-events:none;}
-.mf-glyph-top{font-size:.55rem;letter-spacing:.4em;color:rgba(0,229,255,.25);margin-bottom:1.5rem;}
-.mf-octopus{font-size:4.5rem;display:block;margin:0 auto .8rem;filter:drop-shadow(0 0 20px rgba(191,0,255,.6));animation:octoBoss 4s ease-in-out infinite;}
-@keyframes octoBoss{0%,100%{transform:scale(1) rotate(-3deg);filter:drop-shadow(0 0 15px rgba(191,0,255,.5))}50%{transform:scale(1.08) rotate(3deg);filter:drop-shadow(0 0 35px rgba(191,0,255,.95))}}
-.mf-title{font-family:var(--display);font-size:clamp(1.2rem,4vw,2rem);font-weight:900;letter-spacing:.2em;text-transform:uppercase;background:linear-gradient(90deg,var(--purple),var(--pink),var(--cyan),var(--purple));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleFlow 5s linear infinite;margin-bottom:.3rem;}
-.mf-crew{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem;opacity:.7;}
-.mf-desc{font-size:.76rem;color:var(--text2);line-height:1.9;max-width:520px;margin:0 auto 1.5rem;}
-.mf-desc strong{color:var(--cyan);}
-.mf-ai-credit{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border:1px solid rgba(191,0,255,.3);border-radius:20px;font-size:.65rem;color:rgba(191,0,255,.75);letter-spacing:.08em;background:rgba(191,0,255,.06);margin-bottom:1.5rem;}
-.mf-stats{display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.8rem;flex-wrap:wrap;}
-.mf-stat{text-align:center;}
-.mf-stat .val{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--cyan);display:block;animation:statPulse 3s ease infinite;}
-.mf-stat .lbl{font-size:.58rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;}
-@keyframes statPulse{0%,100%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 14px rgba(0,229,255,.5)}}
-.mf-divider{width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.3),transparent);margin:0 auto 1.5rem;}
-.mf-bottom{font-size:.58rem;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;line-height:2.2;}
-.mf-bottom strong{color:rgba(0,229,255,.45);}
-::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:rgba(0,229,255,.2);border-radius:2px;}
-@keyframes dhcPulse{0%,100%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(30deg) brightness(1.1)}}
-@keyframes dhcHue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
-@keyframes dhcShake{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,0) skewX(.5deg)}75%{transform:translate(2px,0) skewX(-.5deg)}}
-@keyframes dhcFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.01)}}
-@keyframes dhcBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-</style>
+    <meta charset="UTF-8">
+    <title>DA HOOD ASTRONAUTS — QR PORTAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #000;
+            color: #0aff0a;
+            font-family: monospace;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #0aff0a;
+            text-shadow: 0 0 10px #0aff0a;
+        }
+
+        #qrCanvas {
+            margin-top: 20px;
+            image-rendering: pixelated;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            background: #111;
+            border: 1px solid #0aff0a;
+            color: #0aff0a;
+            font-family: monospace;
+        }
+
+        button:hover {
+            background: #0aff0a;
+            color: #000;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #0aff0a;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
 </head>
+
 <body>
-<div class="stars-layer" id="stars-layer"></div>
-<div class="smoke-layer" id="smoke-layer"></div>
-<div class="astro-layer" id="astro-layer"></div>
 
-<div class="app">
-<div class="header">
-  <div class="glyph-row"><span>⬡</span><span>◈</span><span>⬡ DA HOOD ASTRONAUTS ⬡</span><span>◈</span><span>⬡</span></div>
-  <div class="brand-title">DA HOOD CODES</div>
-  <div class="brand-tagline">Xenomorph QR Engine &nbsp;v3.0</div>
-  <div class="free-badge">✦ BESPLATNO ZAUVIJEK — NO WATERMARK — NO LIMITS ✦</div>
-</div>
+    <h1>DA HOOD ASTRONAUTS — QR PORTAL</h1>
 
-<div class="main-layout">
-<div class="left-col">
-  <div class="tabs-row">
-    <button class="tab-btn active" onclick="switchTab('gen')">Generate</button>
-    <button class="tab-btn" onclick="switchTab('dots')">Dots</button>
-    <button class="tab-btn" onclick="switchTab('eyes')">Eyes</button>
-    <button class="tab-btn" onclick="switchTab('colors')">Colors</button>
-    <button class="tab-btn" onclick="switchTab('layout')">Layout</button>
-    <button class="tab-btn" onclick="switchTab('fx')">Trippy FX</button>
-    <button class="tab-btn" onclick="switchTab('logo')">Logo</button>
-    <button class="tab-btn" onclick="switchTab('export')">Export</button>
-    <button class="tab-btn" onclick="switchTab('info')">Info</button>
-  </div>
+    <input id="qrText" type="text" placeholder="Enter text or URL">
+    <br>
+    <button onclick="generateQR()">GENERATE QR</button>
 
-  <div id="p-gen" class="panel active">
-    <p class="sec-label">// URL · text · mantra · coordinates</p>
-    <div class="input-row">
-      <input class="url-input" id="qr-input" type="text" placeholder="https://... ili bilo što..." value="https://dahoodcodes.com">
-      <button class="gen-btn" onclick="generateQR()">ENCODE ⬡</button>
+    <div>
+        <canvas id="qrCanvas"></canvas>
     </div>
-    <p class="sec-label">// quick presets</p>
-    <div class="chip-grid g3">
-      <button class="chip" onclick="qp('url')"><span class="ci">🔗</span>URL</button>
-      <button class="chip" onclick="qp('wifi')"><span class="ci">📡</span>WiFi</button>
-      <button class="chip" onclick="qp('vcard')"><span class="ci">👤</span>vCard</button>
-      <button class="chip" onclick="qp('email')"><span class="ci">📧</span>Email</button>
-      <button class="chip" onclick="qp('sms')"><span class="ci">💬</span>SMS</button>
-      <button class="chip" onclick="qp('btc')"><span class="ci">₿</span>Crypto</button>
-      <button class="chip" onclick="qp('geo')"><span class="ci">📍</span>Location</button>
-      <button class="chip" onclick="qp('tel')"><span class="ci">📞</span>Phone</button>
-      <button class="chip" onclick="qp('event')"><span class="ci">📅</span>Event</button>
-    </div>
-  </div>
 
-  <div id="p-dots" class="panel">
-    <p class="sec-label">// dot shape — 16 oblika</p>
-    <div class="chip-grid g4">
-      <button class="chip active" onclick="setDS('square')" id="ds-square"><span class="ci">⬛</span>Square</button>
-      <button class="chip" onclick="setDS('rounded')" id="ds-rounded"><span class="ci">▪</span>Rounded</button>
-      <button class="chip" onclick="setDS('circle')" id="ds-circle"><span class="ci">●</span>Circle</button>
-      <button class="chip" onclick="setDS('diamond')" id="ds-diamond"><span class="ci">◆</span>Diamond</button>
-      <button class="chip" onclick="setDS('star')" id="ds-star"><span class="ci">★</span>Star5</button>
-      <button class="chip" onclick="setDS('star6')" id="ds-star6"><span class="ci">✡</span>Star6</button>
-      <button class="chip" onclick="setDS('cross')" id="ds-cross"><span class="ci">✚</span>Cross</button>
-      <button class="chip" onclick="setDS('plus')" id="ds-plus"><span class="ci">➕</span>Plus</button>
-      <button class="chip" onclick="setDS('alien')" id="ds-alien"><span class="ci">👽</span>Alien</button>
-      <button class="chip" onclick="setDS('shroom')" id="ds-shroom"><span class="ci">🍄</span>Shroom</button>
-      <button class="chip" onclick="setDS('eye')" id="ds-eye"><span class="ci">👁</span>Eye</button>
-      <button class="chip" onclick="setDS('triangle')" id="ds-triangle"><span class="ci">▲</span>Tri Up</button>
-      <button class="chip" onclick="setDS('triangle_d')" id="ds-triangle_d"><span class="ci">▽</span>Tri Down</button>
-      <button class="chip" onclick="setDS('hex')" id="ds-hex"><span class="ci">⬡</span>Hex</button>
-      <button class="chip" onclick="setDS('arrow')" id="ds-arrow"><span class="ci">➤</span>Arrow</button>
-      <button class="chip" onclick="setDS('random')" id="ds-random"><span class="ci">🎲</span>Random</button>
-    </div>
-    <p class="sec-label">// dot size &amp; rotation</p>
-    <div class="opt-grid">
-      <div class="opt-card"><label>Fill: <span id="dsz-v">82</span>%</label><input type="range" min="40" max="100" value="82" step="1" id="dot-sz" oninput="document.getElementById('dsz-v').textContent=this.value;generateQR()"></div>
-      <div class="opt-card"><label>Rotation: <span id="drt-v">0</span>°</label><input type="range" min="0" max="180" value="0" step="5" id="dot-rot" oninput="document.getElementById('drt-v').textContent=this.value;generateQR()"></div>
-    </div>
-  </div>
+    <footer>
+        ALIEN OCTOPUS — DA HOOD PRODUCTION — DA HOOD ASTRONAUTS
+    </footer>
 
-  <div id="p-eyes" class="panel">
-    <p class="sec-label">// outer eye shape</p>
-    <div class="chip-grid g4">
-      <button class="chip active" onclick="setEO('square')" id="eo-square"><span class="ci">⬜</span>Square</button>
-      <button class="chip" onclick="setEO('rounded')" id="eo-rounded"><span class="ci">▢</span>Rounded</button>
-      <button class="chip" onclick="setEO('circle')" id="eo-circle"><span class="ci">○</span>Circle</button>
-      <button class="chip" onclick="setEO('diamond')" id="eo-diamond"><span class="ci">◇</span>Diamond</button>
-      <button class="chip" onclick="setEO('alien')" id="eo-alien"><span class="ci">👽</span>Alien</button>
-      <button class="chip" onclick="setEO('pig')" id="eo-pig"><span class="ci">🐷</span>Pig</button>
-      <button class="chip" onclick="setEO('xeno')" id="eo-xeno"><span class="ci">🦎</span>Xeno</button>
-      <button class="chip" onclick="setEO('hex')" id="eo-hex"><span class="ci">⬡</span>Hex</button>
-      <button class="chip" onclick="setEO('star')" id="eo-star"><span class="ci">★</span>Star</button>
-      <button class="chip" onclick="setEO('cross')" id="eo-cross"><span class="ci">✚</span>Cross</button>
-      <button class="chip" onclick="setEO('triangle')" id="eo-triangle"><span class="ci">▲</span>Triangle</button>
-      <button class="chip" onclick="setEO('squircle')" id="eo-squircle"><span class="ci">◉</span>Squircle</button>
-    </div>
-    <p class="sec-label">// inner pupil shape</p>
-    <div class="chip-grid g4">
-      <button class="chip active" onclick="setEI('square')" id="ei-square"><span class="ci">⬛</span>Square</button>
-      <button class="chip" onclick="setEI('circle')" id="ei-circle"><span class="ci">●</span>Circle</button>
-      <button class="chip" onclick="setEI('diamond')" id="ei-diamond"><span class="ci">◆</span>Diamond</button>
-      <button class="chip" onclick="setEI('star')" id="ei-star"><span class="ci">★</span>Star</button>
-      <button class="chip" onclick="setEI('alien')" id="ei-alien"><span class="ci">👽</span>Alien</button>
-      <button class="chip" onclick="setEI('pig')" id="ei-pig"><span class="ci">🐷</span>Pig</button>
-      <button class="chip" onclick="setEI('cross')" id="ei-cross"><span class="ci">✚</span>Cross</button>
-      <button class="chip" onclick="setEI('eye')" id="ei-eye"><span class="ci">👁</span>Eye</button>
-      <button class="chip" onclick="setEI('hex')" id="ei-hex"><span class="ci">⬡</span>Hex</button>
-      <button class="chip" onclick="setEI('triangle')" id="ei-triangle"><span class="ci">▲</span>Tri</button>
-      <button class="chip" onclick="setEI('shroom')" id="ei-shroom"><span class="ci">🍄</span>Shroom</button>
-      <button class="chip" onclick="setEI('rounded')" id="ei-rounded"><span class="ci">▪</span>Rounded</button>
-    </div>
-  </div>
+    <script>
+        function generateQR() {
+            const text = document.getElementById("qrText").value;
+            if (!text) return alert("Enter text first.");
 
-  <div id="p-colors" class="panel">
-    <p class="sec-label">// multi-stop gradient — slobodno miješaj</p>
-    <div class="full-opt">
-      <label>Broj gradient boja</label>
-      <select id="grad-stops" onchange="updateGradControls();generateQR()">
-        <option value="2" selected>2 boje</option>
-        <option value="3">3 boje</option>
-        <option value="4">4 boje</option>
-        <option value="5">5 boja</option>
-      </select>
-    </div>
-    <div id="grad-stop-controls"></div>
-    <div class="grad-preview" id="grad-preview"></div>
-    <div class="full-opt">
-      <label>Gradient smjer / tip</label>
-      <select id="grad-type" onchange="generateQR()">
-        <option value="linear_tb" selected>Linear ↓ top→bottom</option>
-        <option value="linear_lr">Linear → left→right</option>
-        <option value="linear_diag">Linear ↘ diagonal</option>
-        <option value="linear_diag2">Linear ↗ anti-diagonal</option>
-        <option value="radial">Radial center→out</option>
-        <option value="radial_corner">Radial corner</option>
-        <option value="multi">Multi-stop sweep</option>
-      </select>
-    </div>
-    <p class="sec-label">// paleta — klikni za stop 1 (lijevom) / stop 2 (desnom)</p>
-    <div class="palette-row" id="palette-row-1"></div>
-    <p class="sec-label" style="margin-top:2px;">// paleta za zadnji stop</p>
-    <div class="palette-row" id="palette-row-2"></div>
-    <p class="sec-label">// dot · bg · eye boje</p>
-    <div class="opt-grid">
-      <div class="opt-card"><label>Dot solid</label><input type="color" id="c-dot" value="#00e5ff" onchange="generateQR()"></div>
-      <div class="opt-card"><label>Background</label><input type="color" id="c-bg" value="#03000f" onchange="generateQR()"></div>
-      <div class="opt-card"><label>Eye outer</label><input type="color" id="c-eo" value="#bf00ff" onchange="generateQR()"></div>
-      <div class="opt-card"><label>Eye inner</label><input type="color" id="c-ei" value="#ff006e" onchange="generateQR()"></div>
-    </div>
-    <p class="sec-label">// preset combosi</p>
-    <div class="color-presets">
-      <button class="cp-btn" style="background:linear-gradient(135deg,#2d6a4f,#a7c957)" onclick="applyCP('ayahuasca')">Ayahuasca</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#00ff88,#00e5ff)" onclick="applyCP('alien')">Alien</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#ff6b6b,#ff9f43)" onclick="applyCP('shroom')">Shroom</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#f72585,#f77f00)" onclick="applyCP('fire')">Fire</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#4cc9f0,#7209b7)" onclick="applyCP('cosmic')">Cosmic</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#ff00ff,#00ffff)" onclick="applyCP('neon')">Neon</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#bf00ff,#ff006e)" onclick="applyCP('xeno')">Xenomorph</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#ffd700,#ff8c00)" onclick="applyCP('gold')">Gold Rush</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#00ffcc,#0066ff)" onclick="applyCP('ocean')">Ocean</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#ff0099,#ff6600,#ffcc00)" onclick="applyCP('sunset')">Sunset</button>
-      <button class="cp-btn" style="background:linear-gradient(135deg,#330066,#9900ff,#00ccff)" onclick="applyCP('galaxy')">Galaxy</button>
-      <button class="cp-btn" style="background:#111;border-color:#555;" onclick="applyCP('bw')">Classic B&amp;W</button>
-    </div>
-  </div>
+            const canvas = document.getElementById("qrCanvas");
+            const ctx = canvas.getContext("2d");
 
-  <div id="p-layout" class="panel">
-    <p class="sec-label">// dot arrangement</p>
-    <div class="chip-grid g3">
-      <button class="chip active" onclick="setLY('normal')" id="ly-normal"><span class="ci">⬛</span>Normal</button>
-      <button class="chip" onclick="setLY('milkyway')" id="ly-milkyway"><span class="ci">🌌</span>Milky Way</button>
-      <button class="chip" onclick="setLY('swirl')" id="ly-swirl"><span class="ci">🌀</span>Swirl</button>
-      <button class="chip" onclick="setLY('wave')" id="ly-wave"><span class="ci">〰</span>Wave</button>
-      <button class="chip" onclick="setLY('explode')" id="ly-explode"><span class="ci">💥</span>Explode</button>
-      <button class="chip" onclick="setLY('vortex')" id="ly-vortex"><span class="ci">🌊</span>Vortex</button>
-    </div>
-    <div class="opt-grid" style="margin-top:8px;">
-      <div class="opt-card"><label>Strength: <span id="li-v">50</span>%</label><input type="range" min="0" max="100" value="50" step="1" id="layout-int" oninput="document.getElementById('li-v').textContent=this.value;generateQR()"></div>
-      <div class="opt-card"><label>Quiet zone: <span id="qz-v">2</span></label><input type="range" min="0" max="10" value="2" step="1" id="quiet-zone" oninput="document.getElementById('qz-v').textContent=this.value;generateQR()"></div>
-    </div>
-  </div>
+            const size = 300;
+            canvas.width = size;
+            canvas.height = size;
 
-  <div id="p-fx" class="panel">
-    <p class="sec-label">// background style</p>
-    <div class="chip-grid g3">
-      <button class="chip active" onclick="setBG('deepspace')" id="bg-deepspace"><span class="ci">🌌</span>Deep Space</button>
-      <button class="chip" onclick="setBG('psycho')" id="bg-psycho"><span class="ci">🎆</span>Psychedelic</button>
-      <button class="chip" onclick="setBG('ayahuasca')" id="bg-ayahuasca"><span class="ci">🌿</span>Ayahuasca</button>
-      <button class="chip" onclick="setBG('lava')" id="bg-lava"><span class="ci">🌋</span>Lava</button>
-      <button class="chip" onclick="setBG('xeno')" id="bg-xeno"><span class="ci">👾</span>Xenomorph</button>
-      <button class="chip" onclick="setBG('white')" id="bg-white"><span class="ci">⬜</span>Print White</button>
-    </div>
-    <p class="sec-label">// overlay effect</p>
-    <div class="chip-grid g3">
-      <button class="chip active" onclick="setFX('none')" id="fx-none"><span class="ci">⬜</span>None</button>
-      <button class="chip" onclick="setFX('glitch')" id="fx-glitch"><span class="ci">👾</span>Glitch</button>
-      <button class="chip" onclick="setFX('scanlines')" id="fx-scanlines"><span class="ci">📺</span>Scanlines</button>
-      <button class="chip" onclick="setFX('rainbow')" id="fx-rainbow"><span class="ci">🌈</span>Rainbow</button>
-      <button class="chip" onclick="setFX('vhs')" id="fx-vhs"><span class="ci">📼</span>VHS</button>
-      <button class="chip" onclick="setFX('matrix')" id="fx-matrix"><span class="ci">💊</span>Matrix</button>
-      <button class="chip" onclick="setFX('stars')" id="fx-stars"><span class="ci">✨</span>Stars</button>
-      <button class="chip" onclick="setFX('smoke')" id="fx-smoke"><span class="ci">💨</span>Smoke</button>
-      <button class="chip" onclick="setFX('portal')" id="fx-portal"><span class="ci">🌀</span>Portal</button>
-    </div>
-    <p class="sec-label">// screen animation</p>
-    <div class="chip-grid g3">
-      <button class="chip active" onclick="setAN('none')" id="an-none"><span class="ci">⏹</span>Static</button>
-      <button class="chip" onclick="setAN('pulse')" id="an-pulse"><span class="ci">💫</span>Pulse</button>
-      <button class="chip" onclick="setAN('hue')" id="an-hue"><span class="ci">🌀</span>Hue Spin</button>
-      <button class="chip" onclick="setAN('shake')" id="an-shake"><span class="ci">⚡</span>Shake</button>
-      <button class="chip" onclick="setAN('float')" id="an-float"><span class="ci">🛸</span>Float</button>
-      <button class="chip" onclick="setAN('breathe')" id="an-breathe"><span class="ci">🌬</span>Breathe</button>
-    </div>
-    <p class="sec-label">// lebdeći astronauti</p>
-    <div class="opt-grid">
-      <div class="opt-card"><label>Broj: <span id="astro-cnt-v">12</span></label><input type="range" min="0" max="30" value="12" step="1" id="astro-cnt" oninput="document.getElementById('astro-cnt-v').textContent=this.value;rebuildAstros()"></div>
-      <div class="opt-card"><label>Veličina: <span id="astro-sz-v">Normal</span></label><input type="range" min="1" max="3" value="2" step="1" id="astro-sz" oninput="const l=['Small','Normal','Big'];document.getElementById('astro-sz-v').textContent=l[this.value-1];rebuildAstros()"></div>
-    </div>
-  </div>
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, size, size);
 
-  <div id="p-logo" class="panel">
-    <p class="sec-label">// upload logo</p>
-    <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <button class="dl-btn prim" onclick="document.getElementById('logo-file').click()" style="flex:1;">⬡ Upload image / logo</button>
-      <button class="dl-btn" onclick="clearLogo()">Remove</button>
-      <input type="file" id="logo-file" accept="image/*" onchange="handleLogo(event)" style="display:none">
-    </div>
-    <div class="opt-grid">
-      <div class="opt-card"><label>Size: <span id="ls-v">25</span>%</label><input type="range" min="10" max="42" value="25" step="1" id="logo-sz" oninput="document.getElementById('ls-v').textContent=this.value;generateQR()"></div>
-      <div class="opt-card"><label>Frame</label><select id="logo-frame" onchange="generateQR()"><option value="circle">Circle</option><option value="square">Square</option><option value="rounded">Rounded</option><option value="none">No frame</option></select></div>
-    </div>
-    <p class="sec-label">// built-in logos</p>
-    <div class="chip-grid g3">
-      <button class="chip" onclick="setEmoji('🍄')"><span class="ci">🍄</span>Shroom</button>
-      <button class="chip" onclick="setEmoji('👽')"><span class="ci">👽</span>Alien</button>
-      <button class="chip" onclick="setEmoji('👁')"><span class="ci">👁</span>Third Eye</button>
-      <button class="chip" onclick="setEmoji('🔥')"><span class="ci">🔥</span>Fire</button>
-      <button class="chip" onclick="setEmoji('🌀')"><span class="ci">🌀</span>Vortex</button>
-      <button class="chip" onclick="setEmoji('🐙')"><span class="ci">🐙</span>Octopus</button>
-      <button class="chip" onclick="setEmoji('🛸')"><span class="ci">🛸</span>UFO</button>
-      <button class="chip" onclick="setEmoji('💀')"><span class="ci">💀</span>Skull</button>
-      <button class="chip" onclick="setEmoji('⭐')"><span class="ci">⭐</span>Star</button>
-    </div>
-  </div>
+            // Simple pseudo QR pattern (placeholder)
+            for (let y = 0; y < size; y += 10) {
+                for (let x = 0; x < size; x += 10) {
+                    if (Math.random() > 0.5) {
+                        ctx.fillStyle = "#0aff0a";
+                        ctx.fillRect(x, y, 10, 10);
+                    }
+                }
+            }
 
-  <div id="p-export" class="panel">
-    <div class="full-opt"><label>QR preview size: <span id="qsz-v">260</span>px</label><input type="range" min="160" max="500" value="260" step="20" id="qr-sz" oninput="document.getElementById('qsz-v').textContent=this.value;resizeQR()"></div>
-    <div class="opt-grid">
-      <div class="opt-card"><label>Export resolution</label><select id="exp-sz"><option value="512">512px — web</option><option value="1024" selected>1024px — print</option><option value="2048">2048px — large</option><option value="4096">4096px — billboard</option></select></div>
-      <div class="opt-card"><label>Error correction</label><select id="err-corr" onchange="generateQR()"><option value="L">L — 7%</option><option value="M" selected>M — 15%</option><option value="Q">Q — 25%</option><option value="H">H — 30%</option></select></div>
-    </div>
-  </div>
+            // Save QR as PNG
+            const link = document.createElement("a");
+            link.download = "qr.png";
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
 
-  <div id="p-info" class="panel">
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:.72rem;color:var(--text2);line-height:1.8;">
-      <p style="color:var(--cyan);margin-bottom:8px;">Da Hood Codes v3.0 — Xenomorph Edition</p>
-      <ul style="list-style:none;">
-        <li>⬡ &nbsp;100% besplatno — sve opcije, zauvijek</li>
-        <li>⬡ &nbsp;Nema registracije, watermarks, bullshita</li>
-        <li>⬡ &nbsp;Radi offline — podaci ostaju u browseru</li>
-        <li>⬡ &nbsp;QR skenabilan unatoč psychedelic stileu</li>
-        <li>⬡ &nbsp;Print-ready do 4096px za flyere i plakate</li>
-        <li>⬡ &nbsp;16 dot oblika + 12 eye oblika</li>
-        <li>⬡ &nbsp;Multi-stop gradient — do 5 boja po izboru</li>
-        <li>⬡ &nbsp;Lebdeći astronauti + smoke efekti</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div class="right-col">
-  <div class="preview-frame-wrap" id="qr-frame">
-    <div class="qr-frame">
-      <canvas id="qr-canvas" width="260" height="260"></canvas>
-      <canvas id="fx-canvas" width="260" height="260"></canvas>
-    </div>
-  </div>
-  <div class="dl-section">
-    <p>// download &amp; share</p>
-    <div class="dl-grid">
-      <button class="dl-btn prim" onclick="dlPNG()">PNG</button>
-      <button class="dl-btn prim" onclick="dlSVGFile()">SVG</button>
-      <button class="dl-btn" onclick="dlJPG()">JPG</button>
-      <button class="dl-btn" onclick="copyImg()">Copy</button>
-    </div>
-    <div style="margin-top:4px;"><button class="dl-btn" onclick="printQR()" style="width:100%;">🖨 Print</button></div>
-  </div>
-</div>
-</div>
-
-<div class="donate-bar">
-  <div class="de">🐙</div>
-  <div class="dt">
-    <strong>Podržи Da Hood Astronauts misiju</strong>
-    <span>Sve je free — al ako ti vibe, donacija drži portale otvorenim 🛸</span>
-  </div>
-  <button class="donate-btn" onclick="alert('Donate opcije coming soon!\nPayPal · Crypto · Patreon\n\nHvala što si dio Da Hood Astronauts ekipe! 🐙🛸')">DONATE ⬡</button>
-</div>
-
-<div class="mastermind-footer">
-  <div class="mf-glyph-top">⬡ &nbsp;◈ &nbsp;⬡ &nbsp;◈ &nbsp;⬡ &nbsp;◈ &nbsp;⬡ &nbsp;◈ &nbsp;⬡ &nbsp;◈ &nbsp;⬡ &nbsp;◈ &nbsp;⬡</div>
-  <span class="mf-octopus">🐙</span>
-  <div class="mf-title">ALIEN OCTOPUS</div>
-  <div class="mf-crew">Mastermind · Osnivač · Da Hood Astronauts</div>
-  <p class="mf-desc">
-    Iza svakog dobrog QR koda stoji jedan <strong>Alien Octopus</strong> —
-    osnivač <strong>Da Hood Astronauts</strong> ekipe, vizionar koji je vidio
-    da psychedelic i QR kodovi prirodno idu zajedno kao ayahuasca i džungla.
-    Osmero pipaka, bezbroj dimenzija, jedna misija:
-    <strong>besplatne alate za sve ljude s vizijom</strong>.
-    Od kozmosa, za ulice.
-  </p>
-  <div class="mf-ai-credit">🤖 &nbsp; sagrađeno uz epsku pomoć bratskih AI kompića — Claude &amp; ekipa &nbsp; 🤖</div>
-  <div class="mf-stats">
-    <div class="mf-stat"><span class="val">∞</span><span class="lbl">Free QR kodova</span></div>
-    <div class="mf-stat"><span class="val">16</span><span class="lbl">Dot oblika</span></div>
-    <div class="mf-stat"><span class="val">∞</span><span class="lbl">Boja kombinacija</span></div>
-    <div class="mf-stat"><span class="val">0$</span><span class="lbl">Cijena zauvijek</span></div>
-  </div>
-  <div class="mf-divider"></div>
-  <div class="mf-bottom">
-    <strong>DA HOOD CODES</strong> · Xenomorph QR Engine v3.0<br>
-    <strong>Da Hood Astronauts</strong> · From the cosmos, for the streets 🛸<br>
-    <span style="color:rgba(0,229,255,.15);font-size:.5rem;letter-spacing:.35em;">⬡ ◈ ⬡ FREE FOREVER · NO LIMITS · NO BULLSHIT ⬡ ◈ ⬡</span>
-  </div>
-</div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-const S={ds:'square',eoShape:'square',eiShape:'square',bgStyle:'deepspace',fx:'none',anim:'none',layout:'normal',logo:null,logoEmoji:null};
-const BGMAP={deepspace:'#03000f',psycho:['#1a0030','#0d0040'],ayahuasca:'#0d1f0d',lava:'#1a0800',xeno:'#000d00',white:'#ffffff'};
-const PALETTE=['#ff006e','#ff3399','#ff69b4','#ff9f43','#f72585','#f77f00','#ffbe0b','#ffd700','#ff8c00','#00ff88','#40916c','#a7c957','#74c69d','#2d6a4f','#00e5ff','#4cc9f0','#0077ff','#3a86ff','#63b3ed','#bf00ff','#7209b7','#9f7aea','#480ca8','#e040fb','#ff00ff','#00ffff','#ff4500','#7fff00','#00bfff','#ffffff','#cccccc','#888888','#444444','#111111','#000000'];
-
-function buildPalettes(){
-  ['1','2'].forEach(n=>{
-    const row=document.getElementById('palette-row-'+n);row.innerHTML='';
-    PALETTE.forEach(col=>{
-      const sw=document.createElement('div');sw.className='pal-swatch';sw.style.background=col;sw.title=col;
-      sw.onclick=()=>{const stops=parseInt(document.getElementById('grad-stops').value);const idx=n==='1'?0:stops-1;const inp=document.querySelectorAll('.grad-stop-inp')[idx];if(inp){inp.value=col;updateGradPreview();generateQR();}};
-      row.appendChild(sw);
-    });
-  });
-}
-function updateGradControls(){
-  const stops=parseInt(document.getElementById('grad-stops').value);
-  const container=document.getElementById('grad-stop-controls');
-  const defaults=['#00e5ff','#bf00ff','#ff006e','#ff9500','#00ff88'];
-  const existing=Array.from(document.querySelectorAll('.grad-stop-inp')).map(i=>i.value);
-  container.innerHTML='';
-  const grid=document.createElement('div');
-  grid.style.cssText='display:grid;grid-template-columns:repeat('+stops+',1fr);gap:6px;margin-bottom:6px;';
-  for(let i=0;i<stops;i++){const wrap=document.createElement('div');wrap.className='opt-card';wrap.innerHTML='<label>Stop '+(i+1)+'</label><input type="color" class="grad-stop-inp" value="'+(existing[i]||defaults[i]||'#ffffff')+'" onchange="updateGradPreview();generateQR()">';grid.appendChild(wrap);}
-  container.appendChild(grid);updateGradPreview();
-}
-function getGradColors(){return Array.from(document.querySelectorAll('.grad-stop-inp')).map(i=>i.value);}
-function updateGradPreview(){
-  const cols=getGradColors();
-  const stops=cols.map((c,i)=>c+' '+(i/(cols.length-1)*100)+'%').join(',');
-  document.getElementById('grad-preview').style.background='linear-gradient(90deg,'+stops+')';
-}
-function switchTab(name){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  const names=['gen','dots','eyes','colors','layout','fx','logo','export','info'];
-  document.querySelectorAll('.tab-btn')[names.indexOf(name)].classList.add('active');
-  document.getElementById('p-'+name).classList.add('active');
-}
-function qp(t){const m={url:'https://dahoodcodes.com',wifi:'WIFI:T:WPA;S:HoodNetwork;P:420blazeit;;',vcard:'BEGIN:VCARD\nVERSION:3.0\nFN:Alien Octopus\nORG:Da Hood Astronauts\nTEL:+385000000\nEMAIL:boss@dahoodastronauts.io\nEND:VCARD',email:'mailto:contact@dahoodcodes.com?subject=Yo',sms:'SMSTO:+385000000:Check this trippy QR!',btc:'bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7Divfna?amount=0.001',geo:'geo:45.8150,15.9819?q=Zagreb',tel:'tel:+38500000000',event:'BEGIN:VEVENT\nSUMMARY:Da Hood Astronauts Party\nDTSTART:20261231T220000Z\nDTEND:20270101T060000Z\nEND:VEVENT'};document.getElementById('qr-input').value=m[t]||'';generateQR();}
-function setDS(v){document.querySelectorAll('[id^="ds-"]').forEach(e=>e.classList.remove('active'));document.getElementById('ds-'+v).classList.add('active');S.ds=v;generateQR();}
-function setEO(v){document.querySelectorAll('[id^="eo-"]').forEach(e=>e.classList.remove('active'));document.getElementById('eo-'+v).classList.add('active');S.eoShape=v;generateQR();}
-function setEI(v){document.querySelectorAll('[id^="ei-"]').forEach(e=>e.classList.remove('active'));document.getElementById('ei-'+v).classList.add('active');S.eiShape=v;generateQR();}
-function setBG(v){document.querySelectorAll('[id^="bg-"]').forEach(e=>e.classList.remove('active'));document.getElementById('bg-'+v).classList.add('active');S.bgStyle=v;generateQR();}
-function setFX(v){document.querySelectorAll('[id^="fx-"]').forEach(e=>e.classList.remove('active'));document.getElementById('fx-'+v).classList.add('active');S.fx=v;drawFX();}
-function setLY(v){document.querySelectorAll('[id^="ly-"]').forEach(e=>e.classList.remove('active'));document.getElementById('ly-'+v).classList.add('active');S.layout=v;generateQR();}
-function setAN(v){document.querySelectorAll('[id^="an-"]').forEach(e=>e.classList.remove('active'));document.getElementById('an-'+v).classList.add('active');S.anim=v;applyAnim();}
-function applyCP(n){
-  const p={ayahuasca:{g:['#2d6a4f','#a7c957'],bg:'#0d1f0d',eo:'#a7c957',ei:'#74c69d'},alien:{g:['#00ff88','#00e5ff'],bg:'#001a0f',eo:'#00ffcc',ei:'#00ff44'},shroom:{g:['#ff6b6b','#ff9f43'],bg:'#1a0a0a',eo:'#ff9f43',ei:'#feca57'},fire:{g:['#f72585','#f77f00','#ffbe0b'],bg:'#0d0005',eo:'#f77f00',ei:'#ffbe0b'},cosmic:{g:['#4cc9f0','#7209b7'],bg:'#03001c',eo:'#7209b7',ei:'#f72585'},neon:{g:['#ff00ff','#00ffff'],bg:'#0a000f',eo:'#00ffff',ei:'#ff00ff'},xeno:{g:['#00ff44','#003300'],bg:'#000d00',eo:'#003300',ei:'#00ff44'},gold:{g:['#ffd700','#ff8c00'],bg:'#1a1000',eo:'#ff8c00',ei:'#ffd700'},ocean:{g:['#00ffcc','#0066ff'],bg:'#00050f',eo:'#00ffcc',ei:'#0066ff'},sunset:{g:['#ff0099','#ff6600','#ffcc00'],bg:'#0f0005',eo:'#ff6600',ei:'#ffcc00'},galaxy:{g:['#330066','#9900ff','#00ccff'],bg:'#030010',eo:'#9900ff',ei:'#00ccff'},bw:{g:['#000000','#000000'],bg:'#ffffff',eo:'#000000',ei:'#000000'}}[n];
-  if(!p)return;
-  document.getElementById('grad-stops').value=p.g.length;updateGradControls();
-  document.querySelectorAll('.grad-stop-inp').forEach((inp,i)=>{if(p.g[i])inp.value=p.g[i];});
-  document.getElementById('c-bg').value=p.bg;document.getElementById('c-eo').value=p.eo;document.getElementById('c-ei').value=p.ei;
-  updateGradPreview();generateQR();
-}
-function setEmoji(e){S.logo=null;S.logoEmoji=e;generateQR();}
-function clearLogo(){S.logo=null;S.logoEmoji=null;generateQR();}
-function handleLogo(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{S.logo=e.target.result;S.logoEmoji=null;generateQR();};r.readAsDataURL(f);}
-function resizeQR(){const sz=parseInt(document.getElementById('qr-sz').value);['qr-canvas','fx-canvas'].forEach(id=>{document.getElementById(id).width=sz;document.getElementById(id).height=sz;});generateQR();}
-function generateQR(){
-  const text=document.getElementById('qr-input').value||'https://dahoodcodes.com';
-  const qsize=parseInt(document.getElementById('qr-sz').value)||260;
-  const bgColor=document.getElementById('c-bg').value;
-  const eyeOuter=document.getElementById('c-eo').value;
-  const eyeInner=document.getElementById('c-ei').value;
-  const gradType=document.getElementById('grad-type').value;
-  const errCorr=document.getElementById('err-corr').value;
-  const dotSz=parseInt(document.getElementById('dot-sz').value)/100;
-  const dotRot=parseInt(document.getElementById('dot-rot').value)*Math.PI/180;
-  const layoutInt=parseInt(document.getElementById('layout-int').value)/100;
-  const gradCols=getGradColors();
-  const canvas=document.getElementById('qr-canvas');canvas.width=qsize;canvas.height=qsize;
-  document.getElementById('fx-canvas').width=qsize;document.getElementById('fx-canvas').height=qsize;
-  const ctx=canvas.getContext('2d');
-  try{
-    const tmp=document.createElement('div');
-    new QRCode(tmp,{text,width:qsize,height:qsize,correctLevel:QRCode.CorrectLevel[errCorr]||QRCode.CorrectLevel.M});
-    const tc=tmp.querySelector('canvas');if(!tc)return;
-    const id=tc.getContext('2d').getImageData(0,0,tc.width,tc.height);
-    const bgDef=BGMAP[S.bgStyle];
-    if(Array.isArray(bgDef)){const gr=ctx.createLinearGradient(0,0,qsize,qsize);bgDef.forEach((c,i)=>gr.addColorStop(i/(bgDef.length-1),c));ctx.fillStyle=gr;}
-    else ctx.fillStyle=bgDef||bgColor;
-    ctx.fillRect(0,0,qsize,qsize);
-    const mc=29,modules=[];
-    for(let r=0;r<mc;r++){modules[r]=[];for(let c=0;c<mc;c++){const px=Math.floor((c+.5)*(tc.width/mc)),py=Math.floor((r+.5)*(tc.width/mc)),idx=(py*tc.width+px)*4;modules[r][c]=id.data[idx]<128;}}
-    const mc2=modules.length,cellPx=qsize/mc2;
-    let dotFill=document.getElementById('c-dot').value;
-    if(gradCols.length>=2){
-      let gr;
-      if(gradType==='radial') gr=ctx.createRadialGradient(qsize/2,qsize/2,0,qsize/2,qsize/2,qsize/2);
-      else if(gradType==='radial_corner') gr=ctx.createRadialGradient(0,0,0,qsize,qsize,qsize);
-      else if(gradType==='linear_lr') gr=ctx.createLinearGradient(0,0,qsize,0);
-      else if(gradType==='linear_diag') gr=ctx.createLinearGradient(0,0,qsize,qsize);
-      else if(gradType==='linear_diag2') gr=ctx.createLinearGradient(qsize,0,0,qsize);
-      else gr=ctx.createLinearGradient(0,0,0,qsize);
-      gradCols.forEach((c,i)=>gr.addColorStop(i/(gradCols.length-1),c));dotFill=gr;
-    }
-    const eyeSz=7;
-    function isEye(r,c){return(r<eyeSz&&c<eyeSz)||(r<eyeSz&&c>=mc2-eyeSz)||(r>=mc2-eyeSz&&c<eyeSz);}
-    for(let r=0;r<mc2;r++){for(let c=0;c<mc2;c++){
-      if(!modules[r]||!modules[r][c])continue;if(isEye(r,c))continue;
-      let x=c*cellPx,y=r*cellPx;const sz=cellPx*dotSz,off=cellPx*(1-dotSz)/2;
-      if(S.layout!=='normal'){const cx=mc2/2,cy=mc2/2,dr=r-cy,dc=c-cx;const dist=Math.sqrt(dr*dr+dc*dc)/(mc2/2),angle=Math.atan2(dr,dc);let sx=0,sy=0;const str=layoutInt*cellPx*.9;
-        if(S.layout==='swirl'){sx=Math.cos(angle+dist*Math.PI)*str*dist;sy=Math.sin(angle+dist*Math.PI)*str*dist;}
-        else if(S.layout==='milkyway'){const sp=angle+dist*2.5;sx=Math.cos(sp)*str*dist*.65;sy=Math.sin(sp)*str*dist*.65;}
-        else if(S.layout==='wave'){sx=Math.sin(r*.4)*str*.5;sy=Math.cos(c*.4)*str*.3;}
-        else if(S.layout==='explode'){sx=dc/mc2*str*2;sy=dr/mc2*str*2;}
-        else if(S.layout==='vortex'){const v=dist*4;sx=-Math.sin(v)*str*dist;sy=Math.cos(v)*str*dist;}
-        x+=sx;y+=sy;}
-      ctx.save();ctx.translate(x+off+sz/2,y+off+sz/2);ctx.rotate(dotRot);ctx.translate(-(x+off+sz/2),-(y+off+sz/2));ctx.fillStyle=dotFill;drawDot(ctx,x+off,y+off,sz,S.ds,r,c,mc2);ctx.restore();
-    }}
-    drawEyes(ctx,mc2,cellPx,eyeOuter,eyeInner,Array.isArray(bgDef)?bgDef[0]:bgDef||bgColor,S.eoShape,S.eiShape);
-    if(S.logo||S.logoEmoji)drawLogo(ctx,qsize);
-  }catch(e){ctx.fillStyle='#03000f';ctx.fillRect(0,0,qsize,qsize);}
-  drawFX();applyAnim();
-}
-function drawDot(ctx,x,y,sz,style,r,c,mc2){
-  ctx.beginPath();
-  switch(style){
-    case 'circle':ctx.arc(x+sz/2,y+sz/2,sz/2,0,Math.PI*2);ctx.fill();break;
-    case 'rounded':rrect(ctx,x,y,sz,sz,sz*.3);ctx.fill();break;
-    case 'diamond':ctx.moveTo(x+sz/2,y);ctx.lineTo(x+sz,y+sz/2);ctx.lineTo(x+sz/2,y+sz);ctx.lineTo(x,y+sz/2);ctx.closePath();ctx.fill();break;
-    case 'star':drawStar(ctx,x+sz/2,y+sz/2,5,sz/2,sz/4);break;
-    case 'star6':drawStar(ctx,x+sz/2,y+sz/2,6,sz/2,sz/3);break;
-    case 'cross':ctx.fillRect(x+sz*.3,y,sz*.4,sz);ctx.fillRect(x,y+sz*.3,sz,sz*.4);break;
-    case 'plus':ctx.fillRect(x+sz*.35,y,sz*.3,sz);ctx.fillRect(x,y+sz*.35,sz,sz*.3);break;
-    case 'alien':ctx.ellipse(x+sz/2,y+sz/2,sz/2,sz*.28,0,0,Math.PI*2);ctx.fill();break;
-    case 'eye':ctx.ellipse(x+sz/2,y+sz/2,sz/2,sz*.32,0,0,Math.PI*2);ctx.fill();const ec=ctx.fillStyle;ctx.fillStyle='rgba(0,0,0,.55)';ctx.beginPath();ctx.arc(x+sz/2,y+sz/2,sz*.15,0,Math.PI*2);ctx.fill();ctx.fillStyle=ec;break;
-    case 'triangle':ctx.moveTo(x+sz/2,y);ctx.lineTo(x+sz,y+sz);ctx.lineTo(x,y+sz);ctx.closePath();ctx.fill();break;
-    case 'triangle_d':ctx.moveTo(x,y);ctx.lineTo(x+sz,y);ctx.lineTo(x+sz/2,y+sz);ctx.closePath();ctx.fill();break;
-    case 'hex':drawHex(ctx,x+sz/2,y+sz/2,sz/2);break;
-    case 'arrow':ctx.moveTo(x+sz/2,y);ctx.lineTo(x+sz,y+sz*.6);ctx.lineTo(x+sz*.65,y+sz*.6);ctx.lineTo(x+sz*.65,y+sz);ctx.lineTo(x+sz*.35,y+sz);ctx.lineTo(x+sz*.35,y+sz*.6);ctx.lineTo(x,y+sz*.6);ctx.closePath();ctx.fill();break;
-    case 'shroom':ctx.font=sz*.88+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🍄',x+sz/2,y+sz/2);return;
-    case 'random':const shapes=['square','circle','diamond','triangle','hex','star','cross','plus'];drawDot(ctx,x,y,sz,shapes[(r*mc2+c)%shapes.length],r,c,mc2);return;
-    default:ctx.fillRect(x,y,sz,sz);
-  }
-}
-function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
-function drawStar(ctx,cx,cy,n,R,r){ctx.beginPath();for(let i=0;i<n*2;i++){const rad=i%2===0?R:r,a=(i*Math.PI)/n-Math.PI/2;i===0?ctx.moveTo(cx+rad*Math.cos(a),cy+rad*Math.sin(a)):ctx.lineTo(cx+rad*Math.cos(a),cy+rad*Math.sin(a));}ctx.closePath();ctx.fill();}
-function drawHex(ctx,cx,cy,r){ctx.beginPath();for(let i=0;i<6;i++){const a=(i*Math.PI)/3-Math.PI/6;i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}ctx.closePath();ctx.fill();}
-function drawEyeShape(ctx,x,y,sz,shape){ctx.beginPath();switch(shape){case 'circle':ctx.arc(x+sz/2,y+sz/2,sz/2,0,Math.PI*2);break;case 'rounded':rrect(ctx,x,y,sz,sz,sz*.2);break;case 'diamond':ctx.moveTo(x+sz/2,y);ctx.lineTo(x+sz,y+sz/2);ctx.lineTo(x+sz/2,y+sz);ctx.lineTo(x,y+sz/2);ctx.closePath();break;case 'alien':ctx.ellipse(x+sz/2,y+sz/2,sz/2,sz*.33,0,0,Math.PI*2);break;case 'pig':ctx.arc(x+sz/2,y+sz/2,sz/2,0,Math.PI*2);break;case 'xeno':rrect(ctx,x,y,sz,sz*.55,4);break;case 'hex':drawHex(ctx,x+sz/2,y+sz/2,sz/2);break;case 'star':drawStar(ctx,x+sz/2,y+sz/2,5,sz/2,sz*.2);break;case 'cross':ctx.rect(x+sz*.3,y,sz*.4,sz);ctx.rect(x,y+sz*.3,sz,sz*.4);break;case 'triangle':ctx.moveTo(x+sz/2,y);ctx.lineTo(x+sz,y+sz);ctx.lineTo(x,y+sz);ctx.closePath();break;case 'squircle':rrect(ctx,x,y,sz,sz,sz*.45);break;default:ctx.rect(x,y,sz,sz);}}
-function drawEyes(ctx,mc,cellPx,outerC,innerC,bgC,eoShape,eiShape){[{r:0,c:0},{r:0,c:mc-7},{r:mc-7,c:0}].forEach(({r,c})=>{const x=c*cellPx,y=r*cellPx,sz=7*cellPx,brd=cellPx;ctx.fillStyle=outerC;drawEyeShape(ctx,x,y,sz,eoShape);ctx.fill();ctx.fillStyle=bgC;drawEyeShape(ctx,x+brd,y+brd,sz-2*brd,eoShape);ctx.fill();ctx.fillStyle=innerC;drawEyeShape(ctx,x+2*cellPx,y+2*cellPx,3*cellPx,eiShape);ctx.fill();if(eoShape==='pig'||eiShape==='pig'){ctx.fillStyle='rgba(255,120,120,.5)';ctx.beginPath();ctx.arc(x+sz*.35,y+sz*.55,sz*.08,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+sz*.65,y+sz*.55,sz*.08,0,Math.PI*2);ctx.fill();}if(eiShape==='shroom'){ctx.font=3*cellPx*.8+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🍄',x+3.5*cellPx,y+3.5*cellPx);}});}
-function drawLogo(ctx,qsize){const pct=parseInt(document.getElementById('logo-sz').value)/100;const lsz=qsize*pct,lx=(qsize-lsz)/2,ly=(qsize-lsz)/2;const frame=document.getElementById('logo-frame').value;ctx.save();if(frame!=='none'){ctx.beginPath();if(frame==='circle')ctx.arc(qsize/2,qsize/2,lsz/2+5,0,Math.PI*2);else if(frame==='rounded')rrect(ctx,lx-5,ly-5,lsz+10,lsz+10,10);else ctx.rect(lx-5,ly-5,lsz+10,lsz+10);ctx.fillStyle='#fff';ctx.fill();}if(S.logoEmoji){ctx.font=lsz*.82+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(S.logoEmoji,qsize/2,qsize/2);}else if(S.logo){const img=new Image();img.onload=()=>{if(frame==='circle'){ctx.save();ctx.beginPath();ctx.arc(qsize/2,qsize/2,lsz/2,0,Math.PI*2);ctx.clip();}ctx.drawImage(img,lx,ly,lsz,lsz);if(frame==='circle')ctx.restore();};img.src=S.logo;}ctx.restore();}
-function drawFX(){const ec=document.getElementById('fx-canvas'),ctx=ec.getContext('2d'),sz=ec.width;ctx.clearRect(0,0,sz,sz);switch(S.fx){case 'scanlines':for(let y=0;y<sz;y+=3){ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(0,y,sz,1.5);}break;case 'rainbow':for(let y=0;y<sz;y++){ctx.fillStyle='hsla('+(y/sz*360)+',100%,60%,.1)';ctx.fillRect(0,y,sz,1);}break;case 'vhs':ctx.fillStyle='rgba(255,0,80,.07)';ctx.fillRect(0,0,sz,sz);for(let y=0;y<sz;y+=2){if(Math.random()>.97){ctx.fillStyle='rgba(0,255,200,.2)';ctx.fillRect(0,y,sz*Math.random(),1);}}break;case 'matrix':ctx.fillStyle='rgba(0,30,0,.25)';ctx.fillRect(0,0,sz,sz);ctx.fillStyle='rgba(0,255,60,.2)';ctx.font='10px monospace';for(let x=0;x<sz;x+=10){ctx.fillText(Math.random()>.5?'1':'0',x,Math.random()*sz);}break;case 'stars':for(let i=0;i<50;i++){ctx.fillStyle='rgba(255,255,255,'+(Math.random()*.5+.1)+')';ctx.beginPath();ctx.arc(Math.random()*sz,Math.random()*sz,Math.random()*1.5+.3,0,Math.PI*2);ctx.fill();}break;case 'smoke':for(let i=0;i<5;i++){const sg=ctx.createRadialGradient(Math.random()*sz,Math.random()*sz,0,sz/2,sz/2,sz/2);sg.addColorStop(0,'rgba(150,80,255,.13)');sg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=sg;ctx.fillRect(0,0,sz,sz);}break;case 'portal':for(let i=5;i>0;i--){const pg=ctx.createRadialGradient(sz/2,sz/2,sz/2*(1-i/5),sz/2,sz/2,sz/2*(1-i/6));pg.addColorStop(0,'rgba(0,229,255,'+(0.05*i)+')');pg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=pg;ctx.fillRect(0,0,sz,sz);}break;case 'glitch':for(let i=0;i<4;i++){ctx.fillStyle='rgba('+Math.floor(Math.random()*255)+',0,'+Math.floor(Math.random()*255)+',.15)';ctx.fillRect(Math.random()*20-10,Math.random()*sz,sz,Math.random()*7+2);}break;}}
-function applyAnim(){const frame=document.getElementById('qr-frame');frame.style.animation='';const base='framePulse 4s ease infinite';const anims={pulse:base+',dhcPulse 2.5s ease infinite',hue:base+',dhcHue 4s linear infinite',shake:base+',dhcShake .25s ease infinite',float:base+',dhcFloat 3s ease-in-out infinite',breathe:base+',dhcBreathe 2s ease-in-out infinite'};frame.style.animation=S.anim!=='none'?(anims[S.anim]||base):base;}
-function dlPNG(){const sz=parseInt(document.getElementById('exp-sz').value);const off=document.createElement('canvas');off.width=sz;off.height=sz;off.getContext('2d').drawImage(document.getElementById('qr-canvas'),0,0,sz,sz);const a=document.createElement('a');a.download='dahoodcodes-qr.png';a.href=off.toDataURL('image/png');a.click();}
-function dlJPG(){const sz=parseInt(document.getElementById('exp-sz').value);const off=document.createElement('canvas');off.width=sz;off.height=sz;const ctx=off.getContext('2d');ctx.fillStyle=document.getElementById('c-bg').value;ctx.fillRect(0,0,sz,sz);ctx.drawImage(document.getElementById('qr-canvas'),0,0,sz,sz);const a=document.createElement('a');a.download='dahoodcodes-qr.jpg';a.href=off.toDataURL('image/jpeg',.95);a.click();}
-function dlSVGFile(){const sz=parseInt(document.getElementById('exp-sz').value)||1024;const d=document.getElementById('qr-canvas').toDataURL('image/png');const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+sz+'" height="'+sz+'"><image href="'+d+'" width="'+sz+'" height="'+sz+'"/></svg>';const a=document.createElement('a');a.download='dahoodcodes-qr.svg';a.href=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));a.click();}
-async function copyImg(){document.getElementById('qr-canvas').toBlob(async b=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);}catch(e){alert('Copy nije uspio — pokušaj Download PNG');}});}
-function printQR(){const d=document.getElementById('qr-canvas').toDataURL();const w=window.open('');w.document.write('<html><head><title>Da Hood Codes</title><style>*{margin:0;padding:0}body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff}</style></head><body><img src="'+d+'" style="max-width:90vmin;max-height:90vmin"></body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),600);}
-function buildStars(){const layer=document.getElementById('stars-layer');layer.innerHTML='';for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2+.5;s.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+sz+'px;height:'+sz+'px;--op1:'+(Math.random()*.15+.05)+';--op2:'+(Math.random()*.5+.2)+';--dur:'+(Math.random()*4+2)+'s;--del:'+(Math.random()*5)+'s;';layer.appendChild(s);}}
-function buildSmoke(){const layer=document.getElementById('smoke-layer');layer.innerHTML='';const colors=['rgba(0,229,255,','rgba(191,0,255,','rgba(0,255,136,','rgba(255,0,110,','rgba(255,149,0,'];for(let i=0;i<18;i++){const s=document.createElement('div');s.className='smoke';const sz=Math.random()*90+40;const col=colors[Math.floor(Math.random()*colors.length)];s.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+sz+'px;height:'+sz+'px;background:radial-gradient(circle,'+col+'.2) 0%,'+col+'0) 70%);--sop:'+(Math.random()*.18+.04)+';--sdur:'+(Math.random()*10+6)+'s;--sdel:'+(Math.random()*8)+'s;--stx:'+((Math.random()-.5)*70)+'px;--sty:'+(-Math.random()*90-20)+'px;';layer.appendChild(s);}}
-const ASTRO_EMOJIS=['🧑‍🚀','👨‍🚀','👩‍🚀','🛸','🌌','⭐','🌠','💫','✨','🪐','🌙','☄️'];
-function rebuildAstros(){const layer=document.getElementById('astro-layer');layer.innerHTML='';const cnt=parseInt(document.getElementById('astro-cnt').value);const szIdx=parseInt(document.getElementById('astro-sz').value);const sizes=[['0.7rem','1rem'],['1rem','1.6rem'],['1.6rem','2.8rem']][szIdx-1];for(let i=0;i<cnt;i++){const a=document.createElement('a');a.className='astro';const em=ASTRO_EMOJIS[Math.floor(Math.random()*ASTRO_EMOJIS.length)];const szMin=parseFloat(sizes[0]),szMax=parseFloat(sizes[1]);const sz=(Math.random()*(szMax-szMin)+szMin)+'rem';const startX=(Math.random()*120-10)+'vw';const dx=((Math.random()-.5)*40)+'vw';const dur=Math.random()*18+8;const del=Math.random()*15;const rot0=Math.random()*360+'deg';const rot1=(Math.random()*720-360)+'deg';const op=Math.random()*.55+.25;a.style.cssText='left:'+startX+';--fsz:'+sz+';--fdur:'+dur+'s;--fdel:-'+del+'s;--rot0:'+rot0+';--rot1:'+rot1+';--aop:'+op+';--dx:'+dx+';';a.textContent=em;layer.appendChild(a);}}
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='qr-input')generateQR();});
-window.addEventListener('load',()=>{buildStars();buildSmoke();updateGradControls();buildPalettes();rebuildAstros();setTimeout(generateQR,400);});
-</script>
 </body>
 </html>
