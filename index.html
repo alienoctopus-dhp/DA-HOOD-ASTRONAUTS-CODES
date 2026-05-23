@@ -5,13 +5,15 @@
     <title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
-
-    <!-- QRCode.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
+    <!-- PLANET KOSMOS / KOSMOS FONT (lokalni fajl, isti folder kao index.html) -->
     <style>
+        @font-face {
+            font-family: 'PlanetKosmos';
+            src: url('KOSMOS.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -19,7 +21,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: radial-gradient(circle at top, #1b1b2f 0, #050509 55%, #000000 100%);
             color: #f5f5f5;
             min-height: 100vh;
@@ -52,17 +54,18 @@
         }
 
         .title {
+            font-family: 'PlanetKosmos', system-ui, sans-serif;
             font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             margin-bottom: 4px;
         }
 
         .subtitle {
+            font-family: 'PlanetKosmos', system-ui, sans-serif;
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.22em;
             color: #9ae6ff;
             margin-bottom: 18px;
         }
@@ -130,7 +133,6 @@
             flex: 1 1 120px;
         }
 
-        input[type="text"],
         input[type="number"],
         select {
             width: 100%;
@@ -229,9 +231,10 @@
         }
 
         .brand {
+            font-family: 'PlanetKosmos', system-ui, sans-serif;
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.22em;
             color: #6bffcf;
             opacity: 0.9;
         }
@@ -249,11 +252,14 @@
             text-align: center;
         }
     </style>
+
+    <!-- QRCode.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
     <div class="card">
-        <!-- LEFT SIDE: CONTROLS -->
+        <!-- LEFT SIDE -->
         <div>
             <div class="badge">
                 <div class="badge-dot"></div>
@@ -265,7 +271,7 @@
             <label for="qrText">Sadržaj QR koda</label>
             <textarea id="qrText">Podrži Da Hood Astronauts misiju</textarea>
             <div class="hint">
-                Možeš upisati tekst, URL, poruku, koordinatu, mantru… UTF‑8 safe (šđčćž rade normalno).
+                Tekst, URL, poruka, koordinata, mantra… UTF‑8 safe (šđčćž rade normalno).
             </div>
 
             <div class="row">
@@ -280,10 +286,10 @@
                 <div>
                     <label for="qrLevel">Error level</label>
                     <select id="qrLevel">
-                        <option value="L">L (low)</option>
+                        <option value="L">L</option>
                         <option value="M">M</option>
                         <option value="Q">Q</option>
-                        <option value="H" selected>H (high)</option>
+                        <option value="H" selected>H</option>
                     </select>
                 </div>
             </div>
@@ -296,12 +302,12 @@
                     ⬇ Download PNG
                 </button>
                 <button class="btn-secondary" id="btnReset">
-                    ♻ Reset na default
+                    ♻ Reset
                 </button>
             </div>
         </div>
 
-        <!-- RIGHT SIDE: QR PREVIEW -->
+        <!-- RIGHT SIDE -->
         <div class="right">
             <div class="qr-label">Live QR preview</div>
             <div class="qr-wrapper">
@@ -314,23 +320,22 @@
     </div>
 
     <div class="footer">
-        Xenomorph QR Engine v3.0 • UTF‑8 • No Cyrillic • Custom Da Hood Astronauts edition
+        Xenomorph QR Engine v3.0 • UTF‑8 • No Cyrillic • Da Hood Astronauts edition
     </div>
 </div>
 
 <script>
-    // Map error level
     function getErrorLevel(level) {
         switch (level) {
             case 'L': return QRCode.CorrectLevel.L;
             case 'M': return QRCode.CorrectLevel.M;
             case 'Q': return QRCode.CorrectLevel.Q;
-            case 'H': 
+            case 'H':
             default:  return QRCode.CorrectLevel.H;
         }
     }
 
-    // Hard UTF‑8 fix za sve inpute (šđčćž itd.)
+    // UTF‑8 fix (šđčćž)
     function fixEncoding(str) {
         try {
             return decodeURIComponent(escape(str));
@@ -392,12 +397,8 @@
     document.getElementById('btnDownload').addEventListener('click', downloadPNG);
     document.getElementById('btnReset').addEventListener('click', resetDefaults);
 
-    // Live update dok tipkaš (bez da te siluje, lagano)
-    document.getElementById('qrText').addEventListener('input', () => {
-        generateQR();
-    });
+    document.getElementById('qrText').addEventListener('input', generateQR);
 
-    // Init
     generateQR();
 </script>
 </body>
