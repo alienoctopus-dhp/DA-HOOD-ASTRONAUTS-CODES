@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
+<title>Da Hood Codes — Xenomorph QR Engine v3.5</title>
 
-<!-- FONT -->
 <style>
   @font-face {
     font-family: "PlanetKosmos";
@@ -26,7 +25,6 @@
     overflow-x: hidden;
   }
 
-  /* FLOATING EMOJI */
   .float-emoji {
     position: fixed;
     font-size: 32px;
@@ -41,18 +39,41 @@
     100% { transform: translateY(-120vh) rotate(360deg); }
   }
 
-  /* MAIN WRAPPER */
   .wrapper {
     position: relative;
     z-index: 2;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px 16px 40px;
   }
 
-  /* CARD */
+  .page-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .page-title-main {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 40px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    background: linear-gradient(120deg, #5cf9ff, #ff4fd8);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 6px;
+  }
+
+  .page-title-sub {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #9ae6ff;
+    opacity: 0.9;
+  }
+
   .card {
-    background: rgba(10, 14, 30, 0.85);
+    background: rgba(10, 14, 30, 0.9);
     border: 1px solid rgba(120, 255, 200, 0.35);
     border-radius: 22px;
     padding: 26px;
@@ -70,7 +91,6 @@
     }
   }
 
-  /* TITLES */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -96,7 +116,7 @@
 
   .title-main {
     font-family: "PlanetKosmos", sans-serif;
-    font-size: 34px;
+    font-size: 24px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
@@ -107,7 +127,7 @@
 
   .title-sub {
     font-family: "PlanetKosmos", sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: #9ae6ff;
@@ -115,7 +135,11 @@
     margin-bottom: 20px;
   }
 
-  /* INPUTS */
+  label {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
   textarea, input, select {
     width: 100%;
     padding: 10px;
@@ -124,6 +148,7 @@
     background: rgba(0, 0, 0, 0.35);
     color: #e8faff;
     font-size: 14px;
+    margin-top: 4px;
     margin-bottom: 12px;
   }
 
@@ -132,7 +157,6 @@
     resize: none;
   }
 
-  /* PRESETS */
   .preset-bar {
     display: flex;
     flex-wrap: wrap;
@@ -167,7 +191,12 @@
     box-shadow: 0 0 10px #78ffc8;
   }
 
-  /* BUTTONS */
+  .row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
   .btn-primary {
     width: 100%;
     padding: 12px;
@@ -185,15 +214,14 @@
     width: 100%;
     padding: 12px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(120, 255, 200, 0.4);
     color: #e8faff;
     font-size: 14px;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
-  /* EXPORT BAR */
   .export-bar {
     display: flex;
     flex-wrap: wrap;
@@ -211,18 +239,20 @@
     font-size: 13px;
   }
 
-  /* RIGHT SIDE */
   .qr-frame {
-    background: #fff;
-    padding: 14px;
-    border-radius: 14px;
+    background: radial-gradient(circle at top, #10152b 0%, #050816 40%, #000000 100%);
+    padding: 18px;
+    border-radius: 18px;
     display: inline-block;
     margin-bottom: 20px;
+    box-shadow:
+      0 0 30px rgba(92, 249, 255, 0.35),
+      0 0 60px rgba(255, 79, 216, 0.25);
   }
 
   .brand {
     font-family: "PlanetKosmos", sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #78ffc8;
@@ -230,30 +260,57 @@
     text-align: center;
   }
 
-  /* DONATE STRIP */
-  .donate-strip {
-    margin-top: 20px;
-    padding: 14px;
-    border-radius: 14px;
-    background: rgba(255, 0, 180, 0.12);
-    border: 1px solid rgba(255, 0, 180, 0.4);
-    text-align: center;
+  .octo-block {
+    margin-top: 26px;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255, 79, 216, 0.08);
+    border: 1px solid rgba(255, 79, 216, 0.5);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .octo-icon {
+    font-size: 42px;
+    filter: drop-shadow(0 0 12px #ff4fd8);
+  }
+
+  .octo-title {
+    font-family: "PlanetKosmos", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ffb3f2;
+    margin-bottom: 6px;
+  }
+
+  .octo-text {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  .donate-links {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .donate-btn {
-    margin-top: 10px;
-    padding: 10px 18px;
-    border-radius: 12px;
-    background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
-    border: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 79, 216, 0.7);
+    background: rgba(255, 79, 216, 0.15);
+    color: #ffe9ff;
+    font-size: 12px;
     cursor: pointer;
-    font-weight: bold;
   }
 </style>
 </head>
 <body>
 
-<!-- FLOATING EMOJI GENERATOR -->
 <script>
   const emojis = ["🛸","👽","✨","🌌","🪐","💫","🌠","🚀","🐙"];
   for (let i = 0; i < 22; i++) {
@@ -268,17 +325,23 @@
 </script>
 
 <div class="wrapper">
+
+  <div class="page-title">
+    <div class="page-title-main">DA HOOD CODES</div>
+    <div class="page-title-sub">Xenomorph QR Engine v3.5</div>
+  </div>
+
   <div class="card">
 
-    <!-- LEFT SIDE -->
+    <!-- LEFT -->
     <div>
       <div class="badge">
         <div class="badge-dot"></div>
-        Xenomorph QR Engine v3.0
+        Astronauts Cosmic Edition
       </div>
 
-      <div class="title-main">Da Hood Codes</div>
-      <div class="title-sub">Astronauts Cosmic Edition</div>
+      <div class="title-main">Generator</div>
+      <div class="title-sub">Custom QR konfigurator</div>
 
       <label>Sadržaj QR koda</label>
       <textarea id="qrText">https://dahoodcodes.com</textarea>
@@ -292,24 +355,75 @@
         <div class="preset-pill" data-type="event"><div class="preset-dot"></div>Event</div>
       </div>
 
-      <label>Veličina (px)</label>
-      <input type="number" id="qrSize" value="512" min="128" max="2048" step="32">
+      <div class="row-2col">
+        <div>
+          <label>Veličina (px)</label>
+          <input type="number" id="qrSize" value="512" min="128" max="2048" step="32">
+        </div>
+        <div>
+          <label>Margin</label>
+          <input type="number" id="qrMargin" value="2" min="0" max="16">
+        </div>
+      </div>
 
-      <label>Margin</label>
-      <input type="number" id="qrMargin" value="2" min="0" max="16">
-
-      <label>Error level</label>
-      <select id="qrLevel">
-        <option value="L">L</option>
-        <option value="M">M</option>
-        <option value="Q">Q</option>
-        <option value="H" selected>H</option>
-      </select>
+      <div class="row-2col">
+        <div>
+          <label>Error level</label>
+          <select id="qrLevel">
+            <option value="L">L</option>
+            <option value="M">M</option>
+            <option value="Q">Q</option>
+            <option value="H" selected>H</option>
+          </select>
+        </div>
+        <div>
+          <label>Foreground</label>
+          <input type="color" id="qrColor" value="#00f5ff">
+        </div>
+      </div>
 
       <button class="btn-primary" id="btnGenerate">⚡ Generate / Refresh</button>
-<!-- QRCode.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+      <button class="btn-secondary" id="btnReset">♻ Reset</button>
 
+      <div class="export-bar">
+        <button class="export-btn" data-format="png">PNG</button>
+        <button class="export-btn" data-format="jpg">JPG</button>
+        <button class="export-btn" data-format="copy">Copy</button>
+        <button class="export-btn" data-format="print">Print</button>
+      </div>
+
+      <div class="octo-block">
+        <div class="octo-icon">🐙</div>
+        <div>
+          <div class="octo-title">ALIEN OCTOPUS</div>
+          <div class="octo-text">
+            Da Hood Astronauts crew, DIY svemirski laboratorij za kodove, muziku i lude ideje.
+            Ako ti se sviđa ovaj engine i želiš da raste, možeš baciti koju kunu / euro:
+          </div>
+          <div class="donate-links">
+            <button class="donate-btn" onclick="window.open('https://m3.aircash.eu/acpay/dariot321','_blank')">
+              💸 Aircash
+            </button>
+            <button class="donate-btn" onclick="window.open('https://revolut.me/alien_octopus','_blank')">
+              🚀 Revolut
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div style="text-align:center;">
+      <div class="qr-frame">
+        <div id="qrcode"></div>
+      </div>
+      <div class="brand">DA HOOD <span style="color:#ff4fd8;">ASTRONAUTS</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 function getErrorLevel(level) {
   switch (level) {
@@ -333,6 +447,7 @@ function generateQR() {
   const size = parseInt(document.getElementById("qrSize").value, 10) || 512;
   const margin = parseInt(document.getElementById("qrMargin").value, 10) || 2;
   const level = document.getElementById("qrLevel").value;
+  const color = document.getElementById("qrColor").value || "#00f5ff";
 
   const container = document.getElementById("qrcode");
   container.innerHTML = "";
@@ -341,6 +456,8 @@ function generateQR() {
     text: fixEncoding(text),
     width: size,
     height: size,
+    colorDark: color,
+    colorLight: "#000000",
     correctLevel: getErrorLevel(level),
     margin: margin
   });
@@ -377,4 +494,96 @@ function copyImage() {
   canvas.toBlob(async (blob) => {
     try {
       const item = new ClipboardItem({ "image/png": blob });
-      await navigator
+      await navigator.clipboard.write([item]);
+    } catch (e) {
+      console.log("Clipboard copy failed", e);
+    }
+  });
+}
+
+function printQR() {
+  const canvas = document.querySelector("#qrcode canvas");
+  const img = document.querySelector("#qrcode img");
+  let dataURL = null;
+
+  if (canvas) dataURL = canvas.toDataURL("image/png");
+  else if (img) dataURL = img.src;
+
+  if (!dataURL) return;
+
+  const w = window.open("", "_blank");
+  if (!w) return;
+
+  w.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head><title>Print QR</title></head>
+    <body style='margin:0;display:flex;align-items:center;justify-content:center;background:#000;'>
+      <img src='${dataURL}' style='max-width:100%;max-height:100%;'/>
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+function resetDefaults() {
+  document.getElementById("qrText").value = "https://dahoodcodes.com";
+  document.getElementById("qrSize").value = 512;
+  document.getElementById("qrMargin").value = 2;
+  document.getElementById("qrLevel").value = "H";
+  document.getElementById("qrColor").value = "#00f5ff";
+  setActivePreset("url");
+  generateQR();
+}
+
+function setActivePreset(type) {
+  document.querySelectorAll(".preset-pill").forEach((el) => {
+    el.classList.toggle("active", el.dataset.type === type);
+  });
+
+  const textArea = document.getElementById("qrText");
+
+  if (type === "url") {
+    textArea.value = "https://dahoodcodes.com";
+  } else if (type === "wifi") {
+    textArea.value = "WIFI:T:WPA;S:DaHoodWiFi;P:lozinka123;;";
+  } else if (type === "email") {
+    textArea.value = "mailto:crew@dahoodcodes.com?subject=Da%20Hood%20Codes";
+  } else if (type === "sms") {
+    textArea.value = "sms:+385911234567?body=Da%20Hood%20Codes";
+  } else if (type === "crypto") {
+    textArea.value = "bitcoin:bc1qexamplewallet?amount=0.01";
+  } else if (type === "event") {
+    textArea.value = "BEGIN:VEVENT\nSUMMARY:Da Hood Astronauts Gathering\nLOCATION:Kosmos\nEND:VEVENT";
+  }
+
+  generateQR();
+}
+
+document.getElementById("btnGenerate").addEventListener("click", generateQR);
+document.getElementById("btnReset").addEventListener("click", resetDefaults);
+
+document.querySelectorAll(".preset-pill").forEach((el) => {
+  el.addEventListener("click", () => setActivePreset(el.dataset.type));
+});
+
+document.querySelectorAll(".export-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const format = btn.dataset.format;
+    if (format === "png" || format === "jpg") downloadImage(format);
+    else if (format === "copy") copyImage();
+    else if (format === "print") printQR();
+  });
+});
+
+document.getElementById("qrText").addEventListener("input", generateQR);
+document.getElementById("qrColor").addEventListener("input", generateQR);
+
+resetDefaults();
+</script>
+
+</body>
+</html>
