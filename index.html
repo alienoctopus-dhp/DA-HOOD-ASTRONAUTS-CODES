@@ -5,7 +5,7 @@
   <title>Da Hood Codes — Xenomorph QR Engine v3.0</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- PLANET KOSMOS font (stavi KOSMOS.ttf u isti folder ako želiš pravi font) -->
+  <!-- KOSMOS FONT (ako želiš pravi font, stavi KOSMOS.ttf u isti folder) -->
   <style>
     @font-face {
       font-family: "PlanetKosmos";
@@ -137,127 +137,165 @@
       color: #9ae6ff;
       opacity: 0.9;
     }
+</head>
+<body>
+  <div class="bg-stars"></div>
 
-    .ribbon {
-      margin-top: 14px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #e5ffe9;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+  <div class="wrapper">
+    <div class="card">
+      <div class="card-inner">
+
+        <!-- LEFT SIDE -->
+        <div>
+          <div class="title-block">
+            <div class="badge">
+              <div class="badge-dot"></div>
+              Xenomorph QR Engine v3.0
+            </div>
+
+            <div class="title-main">Da Hood Codes</div>
+            <div class="title-sub">Podrži Da Hood Astronauts misiju</div>
+
+            <div class="ribbon">
+              <span>Besplatno zavijenje</span> • no watermark • no limits
+            </div>
+          </div>
+
+          <label for="qrText">Sadržaj QR koda</label>
+          <textarea id="qrText">https://dahoodcodes.com</textarea>
+          <div class="hint">
+            URL, poruka, wallet, event, lokacija… šđčćž rade normalno.
+          </div>
+
+          <div class="preset-bar">
+            <div class="preset-pill active" data-type="url">
+              <div class="preset-dot"></div> URL
+            </div>
+            <div class="preset-pill" data-type="wifi">
+              <div class="preset-dot"></div> WiFi
+            </div>
+            <div class="preset-pill" data-type="email">
+              <div class="preset-dot"></div> Email
+            </div>
+            <div class="preset-pill" data-type="sms">
+              <div class="preset-dot"></div> SMS
+            </div>
+            <div class="preset-pill" data-type="crypto">
+              <div class="preset-dot"></div> Crypto
+            </div>
+            <div class="preset-pill" data-type="event">
+              <div class="preset-dot"></div> Event
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="qrSize">Veličina (px)</label>
+              <input type="number" id="qrSize" value="512" min="128" max="2048" step="32" />
+            </div>
+
+            <div>
+              <label for="qrMargin">Margin</label>
+              <input type="number" id="qrMargin" value="2" min="0" max="16" />
+            </div>
+
+            <div>
+              <label for="qrLevel">Error level</label>
+              <select id="qrLevel">
+                <option value="L">L</option>
+                <option value="M">M</option>
+                <option value="Q">Q</option>
+                <option value="H" selected>H</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="buttons-main">
+            <button class="btn-primary" id="btnGenerate">⚡ Encode / Refresh</button>
+            <button class="btn-secondary" id="btnReset">♻ Reset</button>
+          </div>
+
+          <div class="export-bar">
+            <button class="export-btn" data-format="png">PNG</button>
+            <button class="export-btn" data-format="jpg">JPG</button>
+            <button class="export-btn" data-format="svg" disabled>SVG</button>
+            <button class="export-btn" data-format="copy">Copy</button>
+            <button class="export-btn" data-format="print">Print</button>
+          </div>
+
+          <div class="donate-strip">
+            <div class="donate-text">
+              Podrži <span>Da Hood Astronauts</span> misiju — više besplatnih alata, više muzike, više kozmosa.
+            </div>
+            <button class="donate-btn" onclick="window.open('https://dahoodcodes.com', '_blank')">
+              Donate
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right">
+          <div class="right-inner">
+            <div class="qr-label">Live QR preview</div>
+
+            <div class="qr-frame">
+              <div id="qrcode"></div>
+            </div>
+
+            <div class="brand">
+              DA HOOD <span>ASTRONAUTS</span> • CODES
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      Xenomorph QR Engine v3.0 • Da Hood Astronaut
+      <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    function getErrorLevel(level) {
+      switch (level) {
+        case "L": return QRCode.CorrectLevel.L;
+        case "M": return QRCode.CorrectLevel.M;
+        case "Q": return QRCode.CorrectLevel.Q;
+        case "H":
+        default: return QRCode.CorrectLevel.H;
+      }
     }
 
-    .ribbon span {
-      color: #78ffc8;
+    function fixEncoding(str) {
+      try {
+        return decodeURIComponent(escape(str));
+      } catch (e) {
+        return str;
+      }
     }
 
-    label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #b0b0c8;
-      display: block;
-      margin-bottom: 6px;
+    let qr;
+
+    function generateQR() {
+      const text = document.getElementById("qrText").value || "";
+      const size = parseInt(document.getElementById("qrSize").value, 10) || 512;
+      const margin = parseInt(document.getElementById("qrMargin").value, 10) || 2;
+      const level = document.getElementById("qrLevel").value;
+
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+
+      qr = new QRCode(container, {
+        text: fixEncoding(text),
+        width: size,
+        height: size,
+        correctLevel: getErrorLevel(level),
+        margin: margin
+      });
     }
 
-    textarea {
-      width: 100%;
-      min-height: 90px;
-      resize: vertical;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(3, 5, 15, 0.9);
-      color: #f5f5f5;
-      padding: 10px 12px;
-      font-size: 14px;
-      line-height: 1.5;
-      outline: none;
-    }
-
-    textarea:focus {
-      border-color: #78ffc8;
-      box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
-    }
-
-    .hint {
-      font-size: 11px;
-      color: #8f9bb8;
-      margin-top: 4px;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 14px;
-      margin-bottom: 10px;
-    }
-
-    .row > div {
-      flex: 1 1 120px;
-    }
-
-    input[type="number"],
-    input[type="text"],
-    select {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(3, 5, 15, 0.9);
-      color: #f5f5f5;
-      padding: 7px 10px;
-      font-size: 13px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #78ffc8;
-      box-shadow: 0 0 0 1px rgba(120, 255, 200, 0.4);
-    }
-
-    .preset-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-      margin-bottom: 6px;
-    }
-
-    .preset-pill {
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(5, 7, 18, 0.9);
-      padding: 5px 11px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #d0d0ff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .preset-pill.active {
-      border-color: rgba(120, 255, 200, 0.9);
-      background: radial-gradient(circle at top, rgba(120, 255, 200, 0.25), rgba(5, 7, 18, 0.9));
-      color: #78ffc8;
-    }
-
-    .preset-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .buttons-main {
-      display: flex;
-      flex-wrap
+    function downloadImage(format) {
+      if (!qr) return;
+      const canvas = document.querySelector("#qrcode canvas");
+      const img = document
