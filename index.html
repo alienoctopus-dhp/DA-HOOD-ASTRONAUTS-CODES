@@ -124,4 +124,671 @@
     .panel h3 {
       margin: 0 0 12px;
       font-family: "PlanetKosmos", sans-serif;
-      font-size
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+      margin-top: 10px;
+      font-family: "PlanetKosmos", sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 255, 200, 0.35);
+      background: rgba(0, 0, 0, 0.55);
+      color: #e8faff;
+      margin-bottom: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    input[type="color"] {
+      padding: 0;
+      height: 34px;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(120, 255, 200, 0.25);
+      outline: none;
+      margin-bottom: 4px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(120deg, var(--accent1), var(--accent2));
+      border: 1px solid #000;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(92, 249, 255, 0.7);
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .row3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 11px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, var(--accent2), var(--accent1));
+      border: none;
+      color: #000;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      box-shadow:
+        0 0 18px rgba(255, 79, 216, 0.5),
+        0 0 26px rgba(92, 249, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: "PlanetKosmos", sans-serif;
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+
+    .export-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .export-btn {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(120, 255, 200, 0.5);
+      background: rgba(0, 0, 0, 0.7);
+      color: #e8faff;
+      cursor: pointer;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: "PlanetKosmos", sans-serif;
+    }
+    .export-btn:hover {
+      background: rgba(120, 255, 200, 0.15);
+    }
+
+    .qr-shell {
+      background: radial-gradient(circle at top,
+        rgba(92, 249, 255, 0.18),
+        rgba(0, 0, 0, 0.95));
+      border-radius: 24px;
+      padding: 18px;
+      border: 1px solid rgba(92, 249, 255, 0.4);
+      box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(92, 249, 255, 0.25);
+    }
+
+    .qr-frame {
+      background: #000;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #qrSvgWrapper {
+      transition: filter 0.25s ease, opacity 0.25s ease;
+    }
+
+    .donate-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 79, 216, 0.08);
+      border: 1px solid rgba(255, 79, 216, 0.5);
+      font-size: 12px;
+      color: var(--text-soft);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .donate-title {
+      font-family: "PlanetKosmos", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #ffb3f2;
+      margin-bottom: 4px;
+    }
+
+    .donate-btn {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 79, 216, 0.7);
+      background: rgba(255, 79, 216, 0.15);
+      color: #ffe9ff;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: "PlanetKosmos", sans-serif;
+    }
+    .donate-btn:hover { filter: brightness(1.1); }
+
+    .section-label {
+      font-family: "PlanetKosmos", sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(120, 255, 200, 0.4);
+      font-size: 11px;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--text-soft);
+      font-family: "PlanetKosmos", sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .pill.active {
+      background: linear-gradient(120deg, var(--accent1), var(--accent2));
+      color: #000;
+      border-color: transparent;
+    }
+
+    .octo-logo {
+      font-size: 40px;
+      text-align: center;
+      text-shadow:
+        0 0 18px rgba(255, 140, 0, 0.9),
+        0 0 32px rgba(255, 79, 216, 0.8);
+    }
+
+    .octo-logo span {
+      display: inline-block;
+      transform: translateY(0);
+      animation: octoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes octoFloat {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .wrapper { grid-template-columns: 1fr; }
+      .lang-toggle { top: 10px; right: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- floating icons -->
+  <div class="float-icon small" style="top:12%; left:6%;">👨‍🚀</div>
+  <div class="float-icon big" style="top:18%; right:8%; animation-duration:22s;">👽</div>
+  <div class="float-icon" style="top:70%; left:10%; animation-duration:26s;">🚀</div>
+  <div class="float-icon small" style="top:60%; right:12%; animation-duration:24s;">🪐</div>
+  <div class="float-icon" style="top:30%; left:45%; animation-duration:28s;">⭐</div>
+  <div class="float-icon small" style="top:80%; left:30%; animation-duration:30s;">✨</div>
+  <div class="float-icon" style="top:15%; left:30%; animation-duration:32s;">🍄</div>
+  <div class="float-icon small" style="top:50%; right:30%; animation-duration:27s;">🍄</div>
+  <div class="float-icon" style="top:40%; right:45%; animation-duration:34s;">🛸</div>
+  <div class="float-icon small" style="top:75%; right:5%; animation-duration:29s;">☄️</div>
+  <div class="float-icon small" style="top:10%; right:35%; animation-duration:31s;">💠</div>
+  <div class="float-icon small" style="top:88%; left:55%; animation-duration:33s;">🌀</div>
+
+  <div class="lang-toggle" onclick="toggleLang()">
+    <span id="langHR">HR</span> | <span id="langEN" style="opacity:0.5;">EN</span>
+  </div>
+
+  <div class="header">
+    <div class="title-main" id="titleMain">DA HOOD ASTRONAUTS</div>
+    <div class="title-sub" id="titleSub">QR PORTAL GENERATOR</div>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- LEFT: controls -->
+    <div class="panel">
+      <h3 id="panelTitleGenerator">GENERATOR</h3>
+
+      <label id="labelContent">Sadržaj QR koda</label>
+      <textarea id="qrText">https://dahoodcodes.com</textarea>
+
+      <div class="row3">
+        <div>
+          <label id="labelSize">Veličina</label>
+          <input type="number" id="qrSize" value="420" min="120" max="1024">
+        </div>
+        <div>
+          <label id="labelMargin">Margin</label>
+          <input type="number" id="qrMargin" value="2" min="0" max="10">
+        </div>
+        <div>
+          <label id="labelLevel">Error level</label>
+          <select id="qrLevel">
+            <option value="L">L</option>
+            <option value="M">M</option>
+            <option value="Q">Q</option>
+            <option value="H" selected>H</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-label" id="labelShapeTitle">Shape</div>
+      <div class="pill-row" id="shapeRow">
+        <div class="pill active" data-shape="square">Square</div>
+        <div class="pill" data-shape="circle">Circle</div>
+        <div class="pill" data-shape="hex">Hexagon</div>
+        <div class="pill" data-shape="mushroom">Mushroom</div>
+        <div class="pill" data-shape="alien">Alien Head</div>
+      </div>
+
+      <div class="section-label" id="labelColorTitle">Boje</div>
+      <div class="row2">
+        <div>
+          <label id="labelColor1">Primarna</label>
+          <input type="color" id="color1" value="#00f5ff">
+        </div>
+        <div>
+          <label id="labelColor2">Gradient</label>
+          <input type="color" id="color2" value="#ff4fd8">
+        </div>
+      </div>
+
+      <label id="labelBgColor">Pozadina</label>
+      <input type="color" id="bgColor" value="#000000">
+
+      <div class="section-label" id="labelBorderTitle">Obrub</div>
+      <label id="labelBorderWidth">Debljina obruba</label>
+      <input type="range" id="borderWidth" min="0" max="40" value="16">
+
+      <label id="labelBorderRadius">Radius obruba</label>
+      <input type="range" id="borderRadius" min="0" max="80" value="24">
+
+      <div class="section-label" id="labelFXTitle">FX</div>
+      <label id="labelGlow">Glow</label>
+      <input type="range" id="glow" min="0" max="40" value="16">
+
+      <label id="labelHue">Hue rotate</label>
+      <input type="range" id="hue" min="0" max="360" value="0">
+
+      <label id="labelOpacity">Opacity</label>
+      <input type="range" id="opacity" min="30" max="100" value="100">
+
+      <button class="btn-primary" id="btnGenerate">⚡ GENERATE PORTAL</button>
+
+      <div class="export-bar">
+        <button class="export-btn" data-format="png">PNG</button>
+        <button class="export-btn" data-format="jpg">JPG</button>
+        <button class="export-btn" data-format="svg">SVG</button>
+        <button class="export-btn" data-format="copy">COPY</button>
+      </div>
+
+      <div class="donate-box">
+        <div class="octo-logo">
+          <span>🐙</span>
+        </div>
+        <div>
+          <div class="donate-title">ALIEN OCTOPUS</div>
+          <div id="donateText">
+            Ako ti se sviđa ovaj engine i želiš da raste, podrži misiju:
+          </div>
+          <div>
+            <button class="donate-btn" onclick="window.open('https://m3.aircash.eu/acpay/dariot321')">Aircash</button>
+            <button class="donate-btn" onclick="window.open('https://revolut.me/alien_octopus')">Revolut</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: QR preview -->
+    <div class="qr-shell">
+      <h3 id="panelTitlePreview">PORTAL</h3>
+      <div class="qr-frame" id="qrFrame">
+        <div id="qrSvgWrapper"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QRCode.js for matrix generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    let currentShape = "square";
+    let currentLang = "HR";
+
+    function getErrorLevel(level) {
+      return QRCode.CorrectLevel[level] || QRCode.CorrectLevel.H;
+    }
+
+    function createMatrix(text, size, margin, level) {
+      const tempDiv = document.createElement("div");
+      const qr = new QRCode(tempDiv, {
+        text: text || " ",
+        width: size,
+        height: size,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: getErrorLevel(level)
+      });
+      const o = qr._oQRCode;
+      const count = o.getModuleCount();
+      const modules = [];
+      for (let r = 0; r < count; r++) {
+        modules[r] = [];
+        for (let c = 0; c < count; c++) {
+          modules[r][c] = o.isDark(r, c);
+        }
+      }
+      tempDiv.remove();
+      return { modules, count };
+    }
+
+    function shapePath(shape, x, y, s) {
+      const cx = x + s / 2;
+      const cy = y + s / 2;
+      const r = s / 2;
+
+      if (shape === "circle") {
+        return `<circle cx="${cx}" cy="${cy}" r="${r * 0.9}" />`;
+      }
+
+      if (shape === "hex") {
+        const w = s * 0.95;
+        const h = s * 0.95;
+        const hw = w / 2;
+        const hh = h / 2;
+        const px = cx;
+        const py = cy;
+        const p1 = `${px - hw * 0.5},${py - hh}`;
+        const p2 = `${px + hw * 0.5},${py - hh}`;
+        const p3 = `${px + hw},${py}`;
+        const p4 = `${px + hw * 0.5},${py + hh}`;
+        const p5 = `${px - hw * 0.5},${py + hh}`;
+        const p6 = `${px - hw},${py}`;
+        return `<polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}" />`;
+      }
+
+      if (shape === "mushroom") {
+        const capR = r * 0.95;
+        const stemW = s * 0.35;
+        const stemH = s * 0.45;
+        const stemX = cx - stemW / 2;
+        const stemY = cy;
+        return `
+          <circle cx="${cx}" cy="${cy - s * 0.15}" r="${capR}" />
+          <rect x="${stemX}" y="${stemY}" width="${stemW}" height="${stemH}" rx="${stemW * 0.4}" />
+        `;
+      }
+
+      if (shape === "alien") {
+        const headW = s * 0.95;
+        const headH = s * 1.1;
+        const headX = cx - headW / 2;
+        const headY = cy - headH / 2;
+        const eyeOffsetX = headW * 0.18;
+        const eyeOffsetY = headH * 0.1;
+        const eyeW = headW * 0.22;
+        const eyeH = headH * 0.28;
+        return `
+          <ellipse cx="${cx}" cy="${cy}" rx="${headW / 2}" ry="${headH / 2}" />
+          <ellipse cx="${cx - eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
+          <ellipse cx="${cx + eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
+        `;
+      }
+
+      return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.18}" ry="${s * 0.18}" />`;
+    }
+
+    function generateSVG() {
+      const text = document.getElementById("qrText").value.trim();
+      const size = parseInt(document.getElementById("qrSize").value) || 420;
+      const margin = parseInt(document.getElementById("qrMargin").value) || 2;
+      const level = document.getElementById("qrLevel").value || "H";
+
+      const color1 = document.getElementById("color1").value || "#00f5ff";
+      const color2 = document.getElementById("color2").value || "#ff4fd8";
+      const bgColor = document.getElementById("bgColor").value || "#000000";
+
+      const glow = parseInt(document.getElementById("glow").value) || 0;
+      const hue = parseInt(document.getElementById("hue").value) || 0;
+      const opacity = parseInt(document.getElementById("opacity").value) || 100;
+
+      const borderWidth = parseInt(document.getElementById("borderWidth").value) || 0;
+      const borderRadius = parseInt(document.getElementById("borderRadius").value) || 0;
+
+      const { modules, count } = createMatrix(text || " ", size, margin, level);
+      const moduleSize = size / (count + margin * 2);
+
+      let svg = "";
+      svg += `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+      svg += `<defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${color1}"/>
+          <stop offset="100%" stop-color="${color2}"/>
+        </linearGradient>
+      </defs>`;
+
+      svg += `<rect x="0" y="0" width="${size}" height="${size}" fill="${bgColor}" />`;
+
+      if (borderWidth > 0) {
+        const inset = borderWidth / 2 + 4;
+        svg += `<rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}"
+                 fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}"
+                 rx="${borderRadius}" ry="${borderRadius}" />`;
+      }
+
+      svg += `<g fill="url(#grad1)">`;
+
+      for (let r = 0; r < count; r++) {
+        for (let c = 0; c < count; c++) {
+          if (!modules[r][c]) continue;
+          const x = (c + margin) * moduleSize;
+          const y = (r + margin) * moduleSize;
+          svg += shapePath(currentShape, x, y, moduleSize);
+        }
+      }
+
+      svg += `</g></svg>`;
+
+      const wrapper = document.getElementById("qrSvgWrapper");
+      wrapper.innerHTML = svg;
+      wrapper.style.filter = `hue-rotate(${hue}deg)`;
+      wrapper.style.opacity = (opacity / 100).toString();
+
+      const frame = document.getElementById("qrFrame");
+      frame.style.boxShadow =
+        glow > 0
+          ? `0 0 ${glow}px rgba(92, 249, 255, 0.7), 0 0 ${glow * 1.4}px rgba(255, 79, 216, 0.6)`
+          : "none";
+    }
+
+    document.getElementById("btnGenerate").addEventListener("click", generateSVG);
+    document.getElementById("qrText").addEventListener("input", generateSVG);
+    document.getElementById("color1").addEventListener("input", generateSVG);
+    document.getElementById("color2").addEventListener("input", generateSVG);
+    document.getElementById("bgColor").addEventListener("input", generateSVG);
+    document.getElementById("qrSize").addEventListener("change", generateSVG);
+    document.getElementById("qrMargin").addEventListener("change", generateSVG);
+    document.getElementById("qrLevel").addEventListener("change", generateSVG);
+    document.getElementById("glow").addEventListener("input", generateSVG);
+    document.getElementById("hue").addEventListener("input", generateSVG);
+    document.getElementById("opacity").addEventListener("input", generateSVG);
+    document.getElementById("borderWidth").addEventListener("input", generateSVG);
+    document.getElementById("borderRadius").addEventListener("input", generateSVG);
+
+    document.querySelectorAll(".pill").forEach(p => {
+      p.addEventListener("click", () => {
+        document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+        p.classList.add("active");
+        currentShape = p.getAttribute("data-shape");
+        generateSVG();
+      });
+    });
+
+    document.querySelectorAll(".export-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const format = btn.getAttribute("data-format");
+        const wrapper = document.getElementById("qrSvgWrapper");
+        const svgEl = wrapper.querySelector("svg");
+        if (!svgEl) return;
+
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svgEl);
+
+        if (format === "svg") {
+          const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "da-hood-portal.svg";
+          a.click();
+          URL.revokeObjectURL(url);
+          return;
+        }
+
+        const img = new Image();
+        const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(svgBlob);
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+
+          if (format === "png" || format === "jpg") {
+            const mime = format === "png" ? "image/png" : "image/jpeg";
+            const dataURL = canvas.toDataURL(mime);
+            const a = document.createElement("a");
+            a.href = dataURL;
+            a.download = `da-hood-portal.${format}`;
+            a.click();
+          } else if (format === "copy") {
+            canvas.toBlob(blob => {
+              if (navigator.clipboard && navigator.clipboard.write) {
+                const item = new ClipboardItem({ [blob.type]: blob });
+                navigator.clipboard.write([item]).catch(() => {});
+              }
+            });
+          }
+        };
+        img.src = url;
+      });
+    });
+
+    function toggleLang() {
+      const hr = document.getElementById("langHR");
+      const en = document.getElementById("langEN");
+      const isHR = currentLang === "HR";
+      currentLang = isHR ? "EN" : "HR";
+
+      if (currentLang === "EN") {
+        hr.style.opacity = "0.5";
+        en.style.opacity = "1";
+
+        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
+        document.getElementById("panelTitlePreview").innerText = "PORTAL";
+        document.getElementById("labelContent").innerText = "QR content";
+        document.getElementById("labelSize").innerText = "Size";
+        document.getElementById("labelMargin").innerText = "Margin";
+        document.getElementById("labelLevel").innerText = "Error level";
+        document.getElementById("labelShapeTitle").innerText = "Shape";
+        document.getElementById("labelColorTitle").innerText = "Colors";
+        document.getElementById("labelColor1").innerText = "Primary";
+        document.getElementById("labelColor2").innerText = "Gradient";
+        document.getElementById("labelBgColor").innerText = "Background";
+        document.getElementById("labelBorderTitle").innerText = "Border";
+        document.getElementById("labelBorderWidth").innerText = "Border width";
+        document.getElementById("labelBorderRadius").innerText = "Border radius";
+        document.getElementById("labelFXTitle").innerText = "FX";
+        document.getElementById("labelGlow").innerText = "Glow";
+        document.getElementById("labelHue").innerText = "Hue rotate";
+        document.getElementById("labelOpacity").innerText = "Opacity";
+        document.getElementById("donateText").innerText =
+          "If you like this engine and want to support the mission:";
+      } else {
+        hr.style.opacity = "1";
+        en.style.opacity = "0.5";
+
+        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
+        document.getElementById("panelTitlePreview").innerText = "PORTAL";
+        document.getElementById("labelContent").innerText = "Sadržaj QR koda";
+        document.getElementById("labelSize").innerText = "Veličina";
+        document.getElementById("labelMargin").innerText = "Margin";
+        document.getElementById("labelLevel").innerText = "Error level";
+        document.getElementById("labelShapeTitle").innerText = "Shape";
+        document.getElementById("labelColorTitle").innerText = "Boje";
+        document.getElementById("labelColor1").innerText = "Primarna";
+        document.getElementById("labelColor2").innerText = "Gradient";
+        document.getElementById("labelBgColor").innerText = "Pozadina";
+        document.getElementById("labelBorderTitle").innerText = "Obrub";
+        document.getElementById("labelBorderWidth").innerText = "Debljina obruba";
+        document.getElementById("labelBorderRadius").innerText = "Radius obruba";
+        document.getElementById("labelFXTitle").innerText = "FX";
+        document.getElementById("labelGlow").innerText = "Glow";
+        document.getElementById("labelHue").innerText = "Hue rotate";
+        document.getElementById("labelOpacity").innerText = "Opacity";
+        document.getElementById("donateText").innerText =
+          "Ako ti se sviđa ovaj engine i želiš da raste, podrži misiju:";
+      }
+    }
+
+    generateSVG();
+  </script>
+
+</body>
+</html>
