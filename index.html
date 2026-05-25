@@ -2,44 +2,83 @@
 <html lang="hr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Da Hood Astronauts — QR Portal Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Planet Kosmos font -->
+  <!-- Planet Kosmos (original) -->
   <style>
     @font-face {
       font-family: "PlanetKosmos";
       src: url("KOSMOS.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
     }
   </style>
 
   <style>
+    :root {
+      --bg-main: #02030a;
+      --accent1: #5cf9ff;
+      --accent2: #ff4fd8;
+      --accent3: #78ffc8;
+      --text-soft: #b7dfff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top, #050816 0%, #02030a 40%, #000000 100%);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #0b1024 0%, #02030a 40%, #000000 100%);
       color: #e8faff;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* floating cosmic icons */
+    .float-icon {
+      position: fixed;
+      font-size: 22px;
+      opacity: 0.45;
+      animation: float 18s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-icon.small { font-size: 16px; opacity: 0.35; }
+    .float-icon.big { font-size: 30px; opacity: 0.55; }
+
+    @keyframes float {
+      0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+      50%  { transform: translate3d(-20px, -40px, 0) rotate(6deg); }
+      100% { transform: translate3d(10px, -80px, 0) rotate(-4deg); }
     }
 
     .header {
       text-align: center;
       margin-top: 30px;
+      position: relative;
+      z-index: 2;
     }
 
     .title-main {
       font-family: "PlanetKosmos", sans-serif;
-      font-size: 42px;
+      font-size: 40px;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      background: linear-gradient(120deg, #5cf9ff, #ff4fd8);
+      background: linear-gradient(120deg, var(--accent1), var(--accent2));
       -webkit-background-clip: text;
       color: transparent;
+      text-shadow: 0 0 18px rgba(92, 249, 255, 0.4);
     }
 
     .title-sub {
       font-family: "PlanetKosmos", sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: #9ae6ff;
@@ -47,219 +86,97 @@
     }
 
     .lang-toggle {
-      position: absolute;
-      top: 20px;
+      position: fixed;
+      top: 16px;
       right: 20px;
-      font-family: "PlanetKosmos";
-      font-size: 12px;
-      letter-spacing: 0.15em;
+      font-family: "PlanetKosmos", sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.16em;
       cursor: pointer;
-      color: #78ffc8;
+      color: var(--accent3);
+      z-index: 3;
+      text-transform: uppercase;
+    }
+
+    .lang-toggle span {
+      transition: opacity 0.2s ease;
     }
 
     .wrapper {
-      max-width: 1100px;
-      margin: 40px auto;
+      max-width: 1180px;
+      margin: 40px auto 60px;
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
       gap: 30px;
-      padding: 0 20px;
+      padding: 0 20px 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left,
+        rgba(92, 249, 255, 0.12),
+        rgba(0, 0, 0, 0.9));
+      border-radius: 24px;
+      border: 1px solid rgba(120, 255, 200, 0.25);
+      padding: 18px 18px 20px;
+      box-shadow:
+        0 0 25px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(92, 249, 255, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-family: "PlanetKosmos", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+      margin-top: 10px;
     }
 
     textarea, input, select {
       width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(120, 255, 200, 0.3);
-      background: rgba(0, 0, 0, 0.35);
-      color: #e8faff;
-      margin-bottom: 12px;
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 12px;
+      padding: 9px 10px;
       border-radius: 12px;
-      background: linear-gradient(120deg, #ff4fd8, #5cf9ff);
-      border: none;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    .export-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .export-btn {
-      padding: 8px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(120, 255, 200, 0.4);
-      background: rgba(120, 255, 200, 0.1);
+      border: 1px solid rgba(120, 255, 200, 0.35);
+      background: rgba(0, 0, 0, 0.55);
       color: #e8faff;
-      cursor: pointer;
-    }
-
-    .qr-frame {
-      background: #000;
-      padding: 20px;
-      border-radius: 20px;
-      text-align: center;
-    }
-
-    .donate-box {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 15px;
-      background: rgba(255, 79, 216, 0.08);
-      border: 1px solid rgba(255, 79, 216, 0.5);
-    }
-
-    .donate-title {
-      font-family: "PlanetKosmos";
-      font-size: 14px;
-      letter-spacing: 0.15em;
-      color: #ffb3f2;
       margin-bottom: 6px;
+      font-size: 13px;
+      outline: none;
     }
 
-    .donate-btn {
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 79, 216, 0.7);
-      background: rgba(255, 79, 216, 0.15);
-      color: #ffe9ff;
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    input[type="color"] {
+      padding: 0;
+      height: 34px;
       cursor: pointer;
-      margin-right: 10px;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="lang-toggle" onclick="toggleLang()">
-    <span id="langHR">HR</span> | <span id="langEN" style="opacity:0.5;">EN</span>
-  </div>
-
-  <div class="header">
-    <div class="title-main" id="titleMain">DA HOOD ASTRONAUTS</div>
-    <div class="title-sub" id="titleSub">QR PORTAL GENERATOR</div>
-  </div>
-
-  <div class="wrapper">
-
-    <div>
-      <label id="labelContent">Sadržaj QR koda</label>
-      <textarea id="qrText">https://dahoodcodes.com</textarea>
-
-      <label id="labelSize">Veličina (px)</label>
-      <input type="number" id="qrSize" value="512">
-
-      <label id="labelMargin">Margin</label>
-      <input type="number" id="qrMargin" value="2">
-
-      <label id="labelLevel">Error level</label>
-      <select id="qrLevel">
-        <option value="L">L</option>
-        <option value="M">M</option>
-        <option value="Q">Q</option>
-        <option value="H" selected>H</option>
-      </select>
-
-      <label id="labelColor">Boja</label>
-      <input type="color" id="qrColor" value="#00f5ff">
-
-      <button class="btn-primary" id="btnGenerate">⚡ Generate</button>
-
-      <div class="export-bar">
-        <button class="export-btn" data-format="png">PNG</button>
-        <button class="export-btn" data-format="jpg">JPG</button>
-        <button class="export-btn" data-format="copy">Copy</button>
-        <button class="export-btn" data-format="print">Print</button>
-      </div>
-
-      <div class="donate-box">
-        <div class="donate-title">ALIEN OCTOPUS</div>
-        <div id="donateText">
-          Ako ti se sviđa ovaj engine i želiš da raste, podrži misiju:
-        </div>
-        <button class="donate-btn" onclick="window.open('https://m3.aircash.eu/acpay/dariot321')">Aircash</button>
-        <button class="donate-btn" onclick="window.open('https://revolut.me/alien_octopus')">Revolut</button>
-      </div>
-    </div>
-
-    <div class="qr-frame">
-      <div id="qrcode"></div>
-    </div>
-
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <script>
-    function getErrorLevel(level) {
-      return QRCode.CorrectLevel[level] || QRCode.CorrectLevel.H;
     }
 
-    function generateQR() {
-      const text = document.getElementById("qrText").value;
-      const size = parseInt(document.getElementById("qrSize").value);
-      const margin = parseInt(document.getElementById("qrMargin").value);
-      const level = document.getElementById("qrLevel").value;
-      const color = document.getElementById("qrColor").value;
-
-      const container = document.getElementById("qrcode");
-      container.innerHTML = "";
-
-      new QRCode(container, {
-        text: text,
-        width: size,
-        height: size,
-        colorDark: color,
-        colorLight: "#000000",
-        correctLevel: getErrorLevel(level),
-        margin: margin
-      });
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(120, 255, 200, 0.25);
+      outline: none;
+      margin-bottom: 4px;
     }
 
-    document.getElementById("btnGenerate").addEventListener("click", generateQR);
-    document.getElementById("qrText").addEventListener("input", generateQR);
-    document.getElementById("qrColor").addEventListener("input", generateQR);
-
-    generateQR();
-
-    function toggleLang() {
-      const hr = document.getElementById("langHR");
-      const en = document.getElementById("langEN");
-
-      const isHR = hr.style.opacity !== "0.5";
-
-      if (isHR) {
-        hr.style.opacity = "0.5";
-        en.style.opacity = "1";
-
-        document.getElementById("labelContent").innerText = "QR content";
-        document.getElementById("labelSize").innerText = "Size (px)";
-        document.getElementById("labelMargin").innerText = "Margin";
-        document.getElementById("labelLevel").innerText = "Error level";
-        document.getElementById("labelColor").innerText = "Color";
-        document.getElementById("donateText").innerText = "If you like this engine and want to support the mission:";
-      } else {
-        hr.style.opacity = "1";
-        en.style.opacity = "0.5";
-
-        document.getElementById("labelContent").innerText = "Sadržaj QR koda";
-        document.getElementById("labelSize").innerText = "Veličina (px)";
-        document.getElementById("labelMargin").innerText = "Margin";
-        document.getElementById("labelLevel").innerText = "Error level";
-        document.getElementById("labelColor").innerText = "Boja";
-        document.getElementById("donateText").innerText = "Ako ti se sviđa ovaj engine i želiš da raste, podrži misiju:";
-      }
-    }
-  </script>
-
-</body>
-</html>
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width
