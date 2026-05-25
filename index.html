@@ -618,4 +618,628 @@
         <label id="labelGlow">GLOW</label>
         <input type="range" id="glow" min="0" max="40" value="16">
 
-        <label id="labelHue">
+        <label id="labelHue">HUE ROTATE</label>
+        <input type="range" id="hue" min="0" max="360" value="0">
+
+        <label id="labelOpacity">OPACITY</label>
+        <input type="range" id="opacity" min="30" max="100" value="100">
+      </div>
+
+      <!-- BORDER -->
+      <div class="tab-section" id="tabBorder">
+        <div class="section-label" id="labelBorderTitle">OBRUB</div>
+
+        <label id="labelBorderWidth">DEBLJINA OBRUBA</label>
+        <input type="range" id="borderWidth" min="0" max="40" value="16">
+
+        <label id="labelBorderRadius">RADIUS OBRUBA</label>
+        <input type="range" id="borderRadius" min="0" max="80" value="24">
+
+        <div class="section-label" id="labelBorderShapeTitle">OBLIK OBRUBA</div>
+        <div class="pill-row" id="borderShapeRow">
+          <div class="pill active" data-bshape="rect">RECT</div>
+          <div class="pill" data-bshape="rounded">ROUNDED</div>
+          <div class="pill" data-bshape="hex">HEX</div>
+          <div class="pill" data-bshape="portal">PORTAL</div>
+        </div>
+      </div>
+
+      <!-- LOGO -->
+      <div class="tab-section" id="tabLogo">
+        <div class="section-label" id="labelLogoTitle">LOGO U SREDINI</div>
+        <input type="file" id="logoInput" accept="image/*">
+        <label id="labelLogoSize">VELIČINA LOGA</label>
+        <input type="range" id="logoSize" min="10" max="60" value="30">
+        <button class="export-btn" id="btnClearLogo">MAKNI LOGO</button>
+      </div>
+
+      <button class="btn-primary" id="btnGenerate">⚡ GENERATE PORTAL</button>
+
+      <div class="export-bar">
+        <button class="export-btn" data-format="png">PNG</button>
+        <button class="export-btn" data-format="jpg">JPG</button>
+        <button class="export-btn" data-format="svg">SVG</button>
+        <button class="export-btn" data-format="copy">COPY</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: QR preview + footer -->
+    <div>
+      <div class="qr-shell">
+        <h3 id="panelTitlePreview">PORTAL</h3>
+        <div class="qr-frame" id="qrFrame">
+          <div id="qrSvgWrapper"></div>
+        </div>
+      </div>
+
+      <div class="octo-footer">
+        <div class="octo-logo"><span>🐙</span></div>
+        <div class="octo-title">ALIEN OCTOPUS</div>
+        <div class="octo-sub" id="octoSub">
+          MASTERMIND • OSNIVAČ • DA HOOD ASTRONAUTS
+        </div>
+        <div class="octo-text" id="octoText">
+          Iza svakog dobrog QR portala stoji jedan Alien Octopus – osnivač Da Hood Astronauts ekipe,
+          vizionar koji je vidio da psychedelic i QR kodovi prirodno idu zajedno kao ayahuasca i džungla.
+          Osmero pipaka, bezbroj dimenzija, jedna misija: besplatne alate za sve ljude s vizijom.
+          Od kosmosa, za ulice.
+        </div>
+        <div class="octo-stats">
+          <div class="octo-stat-pill">∞ FREE QR KODOVA</div>
+          <div class="octo-stat-pill">16+ DOT / EYE OBLIKA</div>
+          <div class="octo-stat-pill">∞ BOJA KOMBINACIJA</div>
+          <div class="octo-stat-pill">0$ CIJENA ZAUVIJEK</div>
+        </div>
+        <div class="donate-row">
+          <button class="donate-btn" onclick="window.open('https://m3.aircash.eu/acpay/dariot321')">AIRCASH</button>
+          <button class="donate-btn" onclick="window.open('https://revolut.me/alien_octopus')">REVOLUT</button>
+        </div>
+        <div class="prod-tag">
+          DA HOOD PRODUCTION — DA HOOD ASTRONAUTS
+        </div>
+        <div class="octo-footer-bottom">
+          DA HOOD CODES • COMPLEX QR ENGINE V4.0 • FROM THE COSMOS, FOR THE STREETS
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QRCode.js for matrix generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    let currentLang = "HR";
+    let currentDots = "square";
+    let currentOuterEye = "square";
+    let currentInnerEye = "square";
+    let currentLayout = "classic";
+    let currentBorderShape = "rect";
+    let logoDataURL = null;
+
+    function getErrorLevel(level) {
+      return QRCode.CorrectLevel[level] || QRCode.CorrectLevel.H;
+    }
+
+    function createMatrix(text, size, margin, level) {
+      const tempDiv = document.createElement("div");
+      const qr = new QRCode(tempDiv, {
+        text: text || " ",
+        width: size,
+        height: size,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: getErrorLevel(level)
+      });
+      const o = qr._oQRCode;
+      const count = o.getModuleCount();
+      const modules = [];
+      for (let r = 0; r < count; r++) {
+        modules[r] = [];
+        for (let c = 0; c < count; c++) {
+          modules[r][c] = o.isDark(r, c);
+        }
+      }
+      tempDiv.remove();
+      return { modules, count };
+    }
+
+    function dotPath(shape, x, y, s) {
+      const cx = x + s / 2;
+      const cy = y + s / 2;
+      const r = s / 2;
+
+      if (shape === "circle") {
+        return `<circle cx="${cx}" cy="${cy}" r="${r * 0.9}" />`;
+      }
+      if (shape === "rounded") {
+        return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.4}" ry="${s * 0.4}" />`;
+      }
+      if (shape === "diamond") {
+        const p1 = `${cx},${y}`;
+        const p2 = `${x + s},${cy}`;
+        const p3 = `${cx},${y + s}`;
+        const p4 = `${x},${cy}`;
+        return `<polygon points="${p1} ${p2} ${p3} ${p4}" />`;
+      }
+      if (shape === "star5") {
+        const pts = [];
+        const spikes = 5;
+        const outerR = r * 0.95;
+        const innerR = r * 0.45;
+        let rot = Math.PI / 2 * 3;
+        let step = Math.PI / spikes;
+        let x1 = cx;
+        let y1 = cy - outerR;
+        for (let i = 0; i < spikes; i++) {
+          pts.push(`${x1},${y1}`);
+          x1 = cx + Math.cos(rot + step) * innerR;
+          y1 = cy + Math.sin(rot + step) * innerR;
+          pts.push(`${x1},${y1}`);
+          rot += step * 2;
+          x1 = cx + Math.cos(rot) * outerR;
+          y1 = cy + Math.sin(rot) * outerR;
+        }
+        return `<polygon points="${pts.join(" ")}" />`;
+      }
+      if (shape === "hex") {
+        const w = s * 0.95;
+        const h = s * 0.95;
+        const hw = w / 2;
+        const hh = h / 2;
+        const px = cx;
+        const py = cy;
+        const p1 = `${px - hw * 0.5},${py - hh}`;
+        const p2 = `${px + hw * 0.5},${py - hh}`;
+        const p3 = `${px + hw},${py}`;
+        const p4 = `${px + hw * 0.5},${py + hh}`;
+        const p5 = `${px - hw * 0.5},${py + hh}`;
+        const p6 = `${px - hw},${py}`;
+        return `<polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}" />`;
+      }
+      if (shape === "shroom") {
+        const capR = r * 0.95;
+        const stemW = s * 0.35;
+        const stemH = s * 0.45;
+        const stemX = cx - stemW / 2;
+        const stemY = cy;
+        return `
+          <circle cx="${cx}" cy="${cy - s * 0.15}" r="${capR}" />
+          <rect x="${stemX}" y="${stemY}" width="${stemW}" height="${stemH}" rx="${stemW * 0.4}" />
+        `;
+      }
+      if (shape === "alien") {
+        const headW = s * 0.95;
+        const headH = s * 1.1;
+        const headX = cx - headW / 2;
+        const headY = cy - headH / 2;
+        const eyeOffsetX = headW * 0.18;
+        const eyeOffsetY = headH * 0.1;
+        const eyeW = headW * 0.22;
+        const eyeH = headH * 0.28;
+        return `
+          <ellipse cx="${cx}" cy="${cy}" rx="${headW / 2}" ry="${headH / 2}" />
+          <ellipse cx="${cx - eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
+          <ellipse cx="${cx + eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
+        `;
+      }
+      if (shape === "triup") {
+        const p1 = `${cx},${y}`;
+        const p2 = `${x + s},${y + s}`;
+        const p3 = `${x},${y + s}`;
+        return `<polygon points="${p1} ${p2} ${p3}" />`;
+      }
+      if (shape === "tridown") {
+        const p1 = `${x},${y}`;
+        const p2 = `${x + s},${y}`;
+        const p3 = `${cx},${y + s}`;
+        return `<polygon points="${p1} ${p2} ${p3}" />`;
+      }
+
+      return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.18}" ry="${s * 0.18}" />`;
+    }
+
+    function eyeOuterPath(shape, x, y, s) {
+      return dotPath(shape, x, y, s);
+    }
+
+    function eyeInnerPath(shape, x, y, s) {
+      const inset = s * 0.3;
+      return dotPath(shape, x + inset, y + inset, s - inset * 2);
+    }
+
+    function layoutOffset(layout, r, c, count, moduleSize) {
+      let dx = 0, dy = 0;
+      const cx = c - count / 2;
+      const cy = r - count / 2;
+
+      if (layout === "milkyway") {
+        const dist = Math.sqrt(cx * cx + cy * cy);
+        dx = Math.sin(dist * 0.25) * moduleSize * 0.4;
+        dy = Math.cos(dist * 0.25) * moduleSize * 0.4;
+      } else if (layout === "swirl") {
+        const angle = Math.atan2(cy, cx);
+        const dist = Math.sqrt(cx * cx + cy * cy);
+        dx = Math.cos(angle + dist * 0.08) * moduleSize * 0.4;
+        dy = Math.sin(angle + dist * 0.08) * moduleSize * 0.4;
+      } else if (layout === "wave") {
+        dx = Math.sin(r * 0.4) * moduleSize * 0.4;
+        dy = Math.cos(c * 0.4) * moduleSize * 0.4;
+      } else if (layout === "vortex") {
+        const angle = Math.atan2(cy, cx);
+        const dist = Math.sqrt(cx * cx + cy * cy);
+        dx = Math.cos(angle + dist * 0.12) * moduleSize * 0.5;
+        dy = Math.sin(angle + dist * 0.12) * moduleSize * 0.5;
+      }
+
+      return { dx, dy };
+    }
+
+    function generateSVG() {
+      const text = document.getElementById("qrText").value.trim();
+      const size = parseInt(document.getElementById("qrSize").value) || 420;
+      const margin = parseInt(document.getElementById("qrMargin").value) || 2;
+      const level = document.getElementById("qrLevel").value || "H";
+
+      const color1 = document.getElementById("color1").value || "#00f5ff";
+      const color2 = document.getElementById("color2").value || "#ff4fd8";
+      const bgColor = document.getElementById("bgColor").value || "#000000";
+
+      const glow = parseInt(document.getElementById("glow").value) || 0;
+      const hue = parseInt(document.getElementById("hue").value) || 0;
+      const opacity = parseInt(document.getElementById("opacity").value) || 100;
+
+      const borderWidth = parseInt(document.getElementById("borderWidth").value) || 0;
+      const borderRadius = parseInt(document.getElementById("borderRadius").value) || 0;
+      const dotDensity = parseInt(document.getElementById("dotDensity").value) || 100;
+      const layoutRotation = parseInt(document.getElementById("layoutRotation").value) || 0;
+      const logoSize = parseInt(document.getElementById("logoSize").value) || 30;
+
+      const { modules, count } = createMatrix(text || " ", size, margin, level);
+      const moduleSize = size / (count + margin * 2);
+
+      let svg = "";
+      svg += `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+      svg += `<defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${color1}"/>
+          <stop offset="100%" stop-color="${color2}"/>
+        </linearGradient>
+      </defs>`;
+
+      svg += `<rect x="0" y="0" width="${size}" height="${size}" fill="${bgColor}" />`;
+
+      if (borderWidth > 0) {
+        const inset = borderWidth / 2 + 4;
+        if (currentBorderShape === "hex") {
+          const w = size - inset * 2;
+          const h = size - inset * 2;
+          const cx = size / 2;
+          const cy = size / 2;
+          const hw = w / 2;
+          const hh = h / 2;
+          const p1 = `${cx - hw * 0.5},${cy - hh}`;
+          const p2 = `${cx + hw * 0.5},${cy - hh}`;
+          const p3 = `${cx + hw},${cy}`;
+          const p4 = `${cx + hw * 0.5},${cy + hh}`;
+          const p5 = `${cx - hw * 0.5},${cy + hh}`;
+          const p6 = `${cx - hw},${cy}`;
+          svg += `<polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}"
+                   fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}" />`;
+        } else if (currentBorderShape === "portal") {
+          svg += `
+            <rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}"
+              fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}"
+              rx="${borderRadius}" ry="${borderRadius}"
+              filter="url(#portalGlow)" />
+            <defs>
+              <filter id="portalGlow">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feColorMatrix in="blur" type="matrix"
+                  values="0 0 0 0 0.36
+                          0 0 0 0 1
+                          0 0 0 0 0.9
+                          0 0 0 0.9 0"/>
+              </filter>
+            </defs>
+          `;
+        } else {
+          svg += `<rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}"
+                   fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}"
+                   rx="${currentBorderShape === "rounded" ? borderRadius : 0}"
+                   ry="${currentBorderShape === "rounded" ? borderRadius : 0}" />`;
+        }
+      }
+
+      svg += `<g fill="url(#grad1)">`;
+
+      const eyeSize = moduleSize * 7;
+      const eyePositions = [
+        { r: 0, c: 0 },
+        { r: 0, c: count - 7 },
+        { r: count - 7, c: 0 }
+      ];
+
+      function isInEye(r, c) {
+        for (const e of eyePositions) {
+          if (r >= e.r && r < e.r + 7 && c >= e.c && c < e.c + 7) return true;
+        }
+        return false;
+      }
+
+      for (let r = 0; r < count; r++) {
+        for (let c = 0; c < count; c++) {
+          if (!modules[r][c]) continue;
+
+          const densityChance = dotDensity / 100;
+          if (Math.random() > densityChance) continue;
+
+          const baseX = (c + margin) * moduleSize;
+          const baseY = (r + margin) * moduleSize;
+
+          if (isInEye(r, c)) continue;
+
+          const { dx, dy } = layoutOffset(currentLayout, r, c, count, moduleSize);
+          const x = baseX + dx;
+          const y = baseY + dy;
+
+          svg += dotPath(currentDots, x, y, moduleSize);
+        }
+      }
+
+      for (const e of eyePositions) {
+        const ex = (e.c + margin) * moduleSize;
+        const ey = (e.r + margin) * moduleSize;
+        svg += eyeOuterPath(currentOuterEye, ex, ey, eyeSize);
+        svg += eyeInnerPath(currentInnerEye, ex, ey, eyeSize);
+      }
+
+      svg += `</g>`;
+
+      if (logoDataURL) {
+        const logoW = (logoSize / 100) * size;
+        const logoH = logoW;
+        const lx = (size - logoW) / 2;
+        const ly = (size - logoH) / 2;
+        svg += `<image href="${logoDataURL}" x="${lx}" y="${ly}" width="${logoW}" height="${logoH}" preserveAspectRatio="xMidYMid slice" />`;
+      }
+
+      svg += `</svg>`;
+
+      const wrapper = document.getElementById("qrSvgWrapper");
+      wrapper.innerHTML = svg;
+      wrapper.style.filter = `hue-rotate(${hue}deg)`;
+      wrapper.style.opacity = (opacity / 100).toString();
+
+      const frame = document.getElementById("qrFrame");
+      frame.style.boxShadow =
+        glow > 0
+          ? `0 0 ${glow}px rgba(92, 249, 255, 0.7), 0 0 ${glow * 1.4}px rgba(255, 79, 216, 0.6)`
+          : "none";
+
+      wrapper.style.transform = `rotate(${layoutRotation}deg)`;
+    }
+
+    document.getElementById("btnGenerate").addEventListener("click", generateSVG);
+    document.getElementById("qrText").addEventListener("input", generateSVG);
+    document.getElementById("color1").addEventListener("input", generateSVG);
+    document.getElementById("color2").addEventListener("input", generateSVG);
+    document.getElementById("bgColor").addEventListener("input", generateSVG);
+    document.getElementById("qrSize").addEventListener("change", generateSVG);
+    document.getElementById("qrMargin").addEventListener("change", generateSVG);
+    document.getElementById("qrLevel").addEventListener("change", generateSVG);
+    document.getElementById("glow").addEventListener("input", generateSVG);
+    document.getElementById("hue").addEventListener("input", generateSVG);
+    document.getElementById("opacity").addEventListener("input", generateSVG);
+    document.getElementById("borderWidth").addEventListener("input", generateSVG);
+    document.getElementById("borderRadius").addEventListener("input", generateSVG);
+    document.getElementById("dotDensity").addEventListener("input", generateSVG);
+    document.getElementById("layoutRotation").addEventListener("input", generateSVG);
+    document.getElementById("logoSize").addEventListener("input", generateSVG);
+
+    document.querySelectorAll(".pill").forEach(p => {
+      p.addEventListener("click", () => {
+        const dDots = p.getAttribute("data-dots");
+        const dOuter = p.getAttribute("data-outer");
+        const dInner = p.getAttribute("data-inner");
+        const dLayout = p.getAttribute("data-layout");
+        const dBshape = p.getAttribute("data-bshape");
+
+        if (dDots) {
+          document.querySelectorAll("#dotsRow .pill").forEach(x => x.classList.remove("active"));
+          p.classList.add("active");
+          currentDots = dDots;
+        }
+        if (dOuter) {
+          document.querySelectorAll("#outerEyeRow .pill").forEach(x => x.classList.remove("active"));
+          p.classList.add("active");
+          currentOuterEye = dOuter;
+        }
+        if (dInner) {
+          document.querySelectorAll("#innerEyeRow .pill").forEach(x => x.classList.remove("active"));
+          p.classList.add("active");
+          currentInnerEye = dInner;
+        }
+        if (dLayout) {
+          document.querySelectorAll("#layoutRow .pill").forEach(x => x.classList.remove("active"));
+          p.classList.add("active");
+          currentLayout = dLayout;
+        }
+        if (dBshape) {
+          document.querySelectorAll("#borderShapeRow .pill").forEach(x => x.classList.remove("active"));
+          p.classList.add("active");
+          currentBorderShape = dBshape;
+        }
+        generateSVG();
+      });
+    });
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.getAttribute("data-tab");
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+        document.getElementById(tab).classList.add("active");
+      });
+    });
+
+    document.querySelectorAll(".export-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const format = btn.getAttribute("data-format");
+        const wrapper = document.getElementById("qrSvgWrapper");
+        const svgEl = wrapper.querySelector("svg");
+        if (!svgEl) return;
+
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svgEl);
+
+        if (format === "svg") {
+          const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "da-hood-portal.svg";
+          a.click();
+          URL.revokeObjectURL(url);
+          return;
+        }
+
+        const img = new Image();
+        const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(svgBlob);
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+
+          if (format === "png" || format === "jpg") {
+            const mime = format === "png" ? "image/png" : "image/jpeg";
+            const dataURL = canvas.toDataURL(mime);
+            const a = document.createElement("a");
+            a.href = dataURL;
+            a.download = `da-hood-portal.${format}`;
+            a.click();
+          } else if (format === "copy") {
+            canvas.toBlob(blob => {
+              if (navigator.clipboard && navigator.clipboard.write) {
+                const item = new ClipboardItem({ [blob.type]: blob });
+                navigator.clipboard.write([item]).catch(() => {});
+              }
+            });
+          }
+        };
+        img.src = url;
+      });
+    });
+
+    document.getElementById("logoInput").addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        logoDataURL = ev.target.result;
+        generateSVG();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("btnClearLogo").addEventListener("click", () => {
+      logoDataURL = null;
+      document.getElementById("logoInput").value = "";
+      generateSVG();
+    });
+
+    function toggleLang() {
+      const hr = document.getElementById("langHR");
+      const en = document.getElementById("langEN");
+      const isHR = currentLang === "HR";
+      currentLang = isHR ? "EN" : "HR";
+
+      if (currentLang === "EN") {
+        hr.style.opacity = "0.5";
+        en.style.opacity = "1";
+
+        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
+        document.getElementById("panelTitlePreview").innerText = "PORTAL";
+        document.getElementById("labelContent").innerText = "QR CONTENT";
+        document.getElementById("labelSize").innerText = "SIZE";
+        document.getElementById("labelMargin").innerText = "MARGIN";
+        document.getElementById("labelLevel").innerText = "ERROR LEVEL";
+
+        document.getElementById("labelDotsTitle").innerText = "DOT SHAPE";
+        document.getElementById("labelOuterEye").innerText = "OUTER EYE SHAPE";
+        document.getElementById("labelInnerEye").innerText = "INNER PUPIL SHAPE";
+        document.getElementById("labelLayoutTitle").innerText = "LAYOUT";
+        document.getElementById("labelDotDensity").innerText = "DOT DENSITY";
+        document.getElementById("labelRotation").innerText = "ROTATION";
+        document.getElementById("labelColorTitle").innerText = "COLORS";
+        document.getElementById("labelColor1").innerText = "PRIMARY";
+        document.getElementById("labelColor2").innerText = "GRADIENT";
+        document.getElementById("labelBgColor").innerText = "BACKGROUND";
+        document.getElementById("labelFXTitle").innerText = "TRIPPY FX";
+        document.getElementById("labelGlow").innerText = "GLOW";
+        document.getElementById("labelHue").innerText = "HUE ROTATE";
+        document.getElementById("labelOpacity").innerText = "OPACITY";
+        document.getElementById("labelBorderTitle").innerText = "BORDER";
+        document.getElementById("labelBorderWidth").innerText = "BORDER WIDTH";
+        document.getElementById("labelBorderRadius").innerText = "BORDER RADIUS";
+        document.getElementById("labelBorderShapeTitle").innerText = "BORDER SHAPE";
+        document.getElementById("labelLogoTitle").innerText = "CENTER LOGO";
+        document.getElementById("labelLogoSize").innerText = "LOGO SIZE";
+
+        document.getElementById("octoSub").innerText =
+          "MASTERMIND • FOUNDER • DA HOOD ASTRONAUTS";
+        document.getElementById("octoText").innerText =
+          "Behind every good QR portal stands an Alien Octopus – founder of the Da Hood Astronauts crew, " +
+          "a visionary who saw that psychedelics and QR codes naturally go together like ayahuasca and the jungle. " +
+          "Eight tentacles, countless dimensions, one mission: free tools for all people with vision. From the cosmos, for the streets.";
+      } else {
+        hr.style.opacity = "1";
+        en.style.opacity = "0.5";
+
+        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
+        document.getElementById("panelTitlePreview").innerText = "PORTAL";
+        document.getElementById("labelContent").innerText = "SADRŽAJ QR KODA";
+        document.getElementById("labelSize").innerText = "VELIČINA";
+        document.getElementById("labelMargin").innerText = "MARGIN";
+        document.getElementById("labelLevel").innerText = "ERROR LEVEL";
+
+        document.getElementById("labelDotsTitle").innerText = "DOT SHAPE";
+        document.getElementById("labelOuterEye").innerText = "OUTER EYE SHAPE";
+        document.getElementById("labelInnerEye").innerText = "INNER PUPIL SHAPE";
+        document.getElementById("labelLayoutTitle").innerText = "LAYOUT";
+        document.getElementById("labelDotDensity").innerText = "DOT DENSITY";
+        document.getElementById("labelRotation").innerText = "ROTATION";
+        document.getElementById("labelColorTitle").innerText = "BOJE";
+        document.getElementById("labelColor1").innerText = "PRIMARNA";
+        document.getElementById("labelColor2").innerText = "GRADIENT";
+        document.getElementById("labelBgColor").innerText = "POZADINA";
+        document.getElementById("labelFXTitle").innerText = "TRIPPY FX";
+        document.getElementById("labelGlow").innerText = "GLOW";
+        document.getElementById("labelHue").innerText = "HUE ROTATE";
+        document.getElementById("labelOpacity").innerText = "OPACITY";
+        document.getElementById("labelBorderTitle").innerText = "OBRUB";
+        document.getElementById("labelBorderWidth").innerText = "DEBLJINA OBRUBA";
+        document.getElementById("labelBorderRadius").innerText = "RADIUS OBRUBA";
+        document.getElementById("labelBorderShapeTitle").innerText = "OBLIK OBRUBA";
+        document.getElementById("labelLogoTitle").innerText = "LOGO U SREDINI";
+        document.getElementById("labelLogoSize").innerText = "VELIČINA LOGA";
+
+        document.getElementById("octoSub").innerText =
+          "MASTERMIND • OSNIVAČ • DA HOOD ASTRONAUTS";
+        document.getElementById("octoText").innerText =
+          "Iza svakog dobrog QR portala stoji jedan Alien Octopus – osnivač Da Hood Astronauts ekipe, " +
+          "vizionar koji je vidio da psychedelic i QR kodovi prirodno idu zajedno kao ayahuasca i džungla. " +
+          "Osmero pipaka, bezbroj dimenzija, jedna misija: besplatne alate za sve ljude s vizijom. Od kosmosa, za ulice.";
+      }
+    }
+
+    generateSVG();
+  </script>
+
+</body>
+</html>
