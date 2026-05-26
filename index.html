@@ -1,1172 +1,285 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>DA HOOD ASTRONAUTS — QR PORTAL ENGINE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Planet Kosmos font (stavi svoje fajlove u repo) -->
+  <!-- Planet Kosmos font – zamijeni URL s pravim pathom/fontom -->
   <style>
     @font-face {
-      font-family: "PlanetKosmos";
-      src: url("PLANETKOSMOS.ttf") format("truetype"),
-           url("planet_kosmos.ttf") format("truetype");
+      font-family: 'PlanetKosmos';
+      src: url('PlanetKosmos.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
-  </style>
 
-  <style>
     :root {
-      --bg-main: #02030a;
-      --accent1: #5cf9ff;
-      --accent2: #ff4fd8;
-      --accent3: #78ffc8;
-      --text-soft: #b7dfff;
+      --bg-color: #02030a;
+      --panel-bg: rgba(5, 8, 25, 0.95);
+      --accent1: #00f5ff;
+      --accent2: #ff00ff;
+      --accent3: #ff9a00;
+      --text-main: #f5f5ff;
+      --text-muted: #9ca3c7;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --glow-color: rgba(0, 255, 255, 0.7);
+      --danger: #ff3366;
+      --success: #4ade80;
     }
 
-    * { box-sizing: border-box; }
-
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at top, #0b1024 0%, #02030a 40%, #000000 100%);
-      color: #e8faff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
     }
 
-    /* floating cosmic icons */
-    .float-icon {
-      position: fixed;
-      font-size: 22px;
-      opacity: 0.45;
-      animation: float 18s linear infinite;
-      pointer-events: none;
-      z-index: 1;
+    body {
+      font-family: 'PlanetKosmos', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1a1030 0, #02030a 55%, #000000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
     }
-    .float-icon.small { font-size: 16px; opacity: 0.35; }
-    .float-icon.big { font-size: 30px; opacity: 0.55; }
+
+    /* Zvjezdana pozadina */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20% 20%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1.5px 1.5px at 80% 30%, rgba(0,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 40% 80%, rgba(255,0,255,0.7), transparent),
+        radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.5), transparent);
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* Lebdeći emojiji – malo ubrzano */
+    .floating-emoji {
+      position: fixed;
+      font-size: 32px;
+      pointer-events: none;
+      opacity: 0.8;
+      animation: float 8s linear infinite;
+      z-index: -1;
+    }
+
+    .floating-emoji:nth-child(1) { top: 10%; left: 8%; animation-duration: 7s; }
+    .floating-emoji:nth-child(2) { top: 70%; left: 15%; animation-duration: 9s; }
+    .floating-emoji:nth-child(3) { top: 20%; right: 10%; animation-duration: 8s; }
+    .floating-emoji:nth-child(4) { bottom: 10%; right: 18%; animation-duration: 7.5s; }
 
     @keyframes float {
-      0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
-      50%  { transform: translate3d(-20px, -40px, 0) rotate(6deg); }
-      100% { transform: translate3d(10px, -80px, 0) rotate(-4deg); }
+      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.7; }
+      25% { transform: translateY(-20px) translateX(10px) rotate(5deg); opacity: 1; }
+      50% { transform: translateY(0) translateX(20px) rotate(-5deg); opacity: 0.8; }
+      75% { transform: translateY(-15px) translateX(-10px) rotate(3deg); opacity: 1; }
+      100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.7; }
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1300px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 24px;
+      background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,0,255,0.08));
+      border-radius: 24px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 0 40px rgba(0,0,0,0.8),
+        0 0 60px rgba(0,255,255,0.25),
+        0 0 80px rgba(255,0,255,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(0,255,255,0.12), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(255,0,255,0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .left-panel,
+    .right-panel {
+      background: var(--panel-bg);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .header {
       text-align: center;
-      margin-top: 30px;
-      position: relative;
-      z-index: 2;
+      margin-bottom: 4px;
     }
 
-    .title-main {
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 40px;
-      letter-spacing: 0.25em;
+    .title {
+      font-size: 32px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      background: linear-gradient(120deg, var(--accent1), var(--accent2));
+      background: linear-gradient(90deg, #00f5ff, #ff00ff, #ff9a00, #00f5ff);
+      background-size: 300% 100%;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
-      text-shadow: 0 0 18px rgba(92, 249, 255, 0.4);
+      animation: rainbowTitle 6s linear infinite;
+      text-shadow:
+        0 0 12px rgba(0,255,255,0.8),
+        0 0 22px rgba(255,0,255,0.7),
+        0 0 32px rgba(255,154,0,0.7);
+      margin-bottom: 4px;
     }
 
-    .title-sub {
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #9ae6ff;
-      margin-top: 6px;
+    @keyframes rainbowTitle {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .version-tag {
-      margin-top: 6px;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #ffb3f2;
-    }
-
-    .lang-toggle {
-      position: fixed;
-      top: 16px;
-      right: 20px;
-      font-family: "PlanetKosmos", sans-serif;
+    .subtitle {
       font-size: 11px;
-      letter-spacing: 0.16em;
-      cursor: pointer;
-      color: var(--accent3);
-      z-index: 3;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-    }
-    .lang-toggle span { transition: opacity 0.2s ease; }
-
-    .wrapper {
-      max-width: 1240px;
-      margin: 40px auto 60px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 30px;
-      padding: 0 20px 40px;
-      position: relative;
-      z-index: 2;
+      color: var(--text-muted);
     }
 
-    .panel {
-      background: radial-gradient(circle at top left,
-        rgba(92, 249, 255, 0.12),
-        rgba(0, 0, 0, 0.9));
-      border-radius: 24px;
-      border: 1px solid rgba(120, 255, 200, 0.25);
-      padding: 18px 18px 20px;
-      box-shadow:
-        0 0 25px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(92, 249, 255, 0.12);
-      backdrop-filter: blur(10px);
+    .subtitle span {
+      color: var(--accent1);
     }
 
-    .panel h3 {
-      margin: 0 0 12px;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 13px;
+    .section-title {
+      font-size: 11px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--text-soft);
+      color: var(--accent1);
+      margin-bottom: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
     }
 
     label {
       display: block;
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-bottom: 4px;
-      margin-top: 10px;
-      font-family: "PlanetKosmos", sans-serif;
-      letter-spacing: 0.12em;
+      font-size: 10px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
     }
 
-    textarea, input, select {
+    input[type="text"],
+    input[type="number"],
+    select {
       width: 100%;
-      padding: 9px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(120, 255, 200, 0.35);
-      background: rgba(0, 0, 0, 0.55);
-      color: #e8faff;
-      margin-bottom: 6px;
-      font-size: 13px;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(3, 7, 18, 0.9);
+      color: var(--text-main);
+      font-size: 11px;
+      font-family: inherit;
       outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
-    textarea {
-      min-height: 70px;
-      resize: vertical;
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      border-color: var(--accent1);
+      box-shadow: 0 0 0 1px rgba(0,255,255,0.4);
+      background: rgba(3, 7, 18, 1);
     }
 
-    input[type="color"] {
-      padding: 0;
-      height: 34px;
-      cursor: pointer;
+    .inline-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .inline-row-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-row span {
+      font-size: 10px;
+      color: var(--text-muted);
+      min-width: 40px;
+      text-align: right;
     }
 
     input[type="range"] {
+      flex: 1;
       -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
+      height: 4px;
       border-radius: 999px;
-      background: rgba(120, 255, 200, 0.25);
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
       outline: none;
-      margin-bottom: 4px;
     }
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: linear-gradient(120deg, var(--accent1), var(--accent2));
-      border: 1px solid #000;
+      background: #fff;
+      border: 2px solid var(--accent2);
+      box-shadow: 0 0 8px rgba(255,0,255,0.7);
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(92, 249, 255, 0.7);
-    }
-
-    .row2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .row3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 11px;
-      border-radius: 14px;
-      background: linear-gradient(120deg, var(--accent2), var(--accent1));
-      border: none;
-      color: #000;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      box-shadow:
-        0 0 18px rgba(255, 79, 216, 0.5),
-        0 0 26px rgba(92, 249, 255, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-family: "PlanetKosmos", sans-serif;
-    }
-    .btn-primary:hover { filter: brightness(1.08); }
-
-    .export-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .export-btn {
-      padding: 7px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(120, 255, 200, 0.5);
-      background: rgba(0, 0, 0, 0.7);
-      color: #e8faff;
-      cursor: pointer;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-family: "PlanetKosmos", sans-serif;
-    }
-    .export-btn:hover {
-      background: rgba(120, 255, 200, 0.15);
-    }
-
-    .tab-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-      margin-top: 4px;
-    }
-
-    .tab-btn {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(120, 255, 200, 0.4);
-      background: rgba(0, 0, 0, 0.7);
-      color: var(--text-soft);
-      cursor: pointer;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-family: "PlanetKosmos", sans-serif;
-    }
-    .tab-btn.active {
-      background: linear-gradient(120deg, var(--accent1), var(--accent2));
-      color: #000;
-      border-color: transparent;
-    }
-
-    .tab-section { display: none; margin-top: 6px; }
-    .tab-section.active { display: block; }
-
-    .section-label {
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin-top: 10px;
-      margin-bottom: 4px;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 6px;
     }
 
     .pill {
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 999px;
-      border: 1px solid rgba(120, 255, 200, 0.4);
-      font-size: 11px;
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0.6);
-      color: var(--text-soft);
-      font-family: "PlanetKosmos", sans-serif;
+      border: 1px solid rgba(255,255,255,0.22);
+      font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: rgba(3, 7, 18, 0.9);
+      transition: all 0.15s ease;
     }
+
     .pill.active {
-      background: linear-gradient(120deg, var(--accent1), var(--accent2));
-      color: #000;
-      border-color: transparent;
+      border-color: var(--accent1);
+      color: var(--accent1);
+      box-shadow: 0 0 10px rgba(0,255,255,0.6);
+      background: radial-gradient(circle at top, rgba(0,255,255,0.2), transparent 60%);
     }
 
-    .qr-shell {
-      background: radial-gradient(circle at top,
-        rgba(92, 249, 255, 0.18),
-        rgba(0, 0, 0, 0.95));
-      border-radius: 24px;
-      padding: 18px;
-      border: 1px solid rgba(92, 249, 255, 0.4);
-      box-shadow:
-        0 0 30px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(92, 249, 255, 0.25);
-    }
-
-    .qr-frame {
-      background: #000;
-      border-radius: 18px;
-      padding: 18px;
-      text-align: center;
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    #qrSvgWrapper {
-      transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .octo-footer {
-      margin-top: 18px;
-      padding: 18px 16px 16px;
-      border-radius: 20px;
-      background: radial-gradient(circle at top,
-        rgba(255, 140, 0, 0.18),
-        rgba(0, 0, 0, 0.95));
-      border: 1px solid rgba(255, 140, 0, 0.7);
-      box-shadow:
-        0 0 24px rgba(255, 140, 0, 0.5),
-        0 0 40px rgba(255, 79, 216, 0.35);
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .octo-logo {
-      font-size: 46px;
-      text-align: center;
-      text-shadow:
-        0 0 18px rgba(255, 140, 0, 0.9),
-        0 0 32px rgba(255, 79, 216, 0.8);
-      margin-bottom: 4px;
-    }
-
-    .octo-logo span {
-      display: inline-block;
-      transform: translateY(0);
-      animation: octoFloat 4s ease-in-out infinite;
-    }
-
-    @keyframes octoFloat {
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-6px); }
-      100% { transform: translateY(0); }
-    }
-
-    .octo-title {
-      text-align: center;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 16px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #ffe9c0;
-      margin-bottom: 4px;
-    }
-
-    .octo-sub {
-      text-align: center;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #ffb3f2;
-      margin-bottom: 10px;
-    }
-
-    .donate-row {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .donate-btn {
-      padding: 7px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 79, 216, 0.7);
-      background: rgba(255, 79, 216, 0.15);
-      color: #ffe9ff;
-      cursor: pointer;
-      margin: 4px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-family: "PlanetKosmos", sans-serif;
-    }
-    .donate-btn:hover { filter: brightness(1.1); }
-
-    .prod-tag {
-      margin-top: 10px;
-      text-align: center;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #9ae6ff;
-    }
-
-    .octo-footer-bottom {
-      text-align: center;
-      font-family: "PlanetKosmos", sans-serif;
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #ffb3f2;
-      margin-top: 6px;
-    }
-
-    @media (max-width: 900px) {
-      .wrapper { grid-template-columns: 1fr; }
-      .lang-toggle { top: 10px; right: 12px; }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- floating icons -->
-  <div class="float-icon small" style="top:12%; left:6%;">👨‍🚀</div>
-  <div class="float-icon big" style="top:18%; right:8%; animation-duration:22s;">👽</div>
-  <div class="float-icon" style="top:70%; left:10%; animation-duration:26s;">🚀</div>
-  <div class="float-icon small" style="top:60%; right:12%; animation-duration:24s;">🪐</div>
-  <div class="float-icon" style="top:30%; left:45%; animation-duration:28s;">⭐</div>
-  <div class="float-icon small" style="top:80%; left:30%; animation-duration:30s;">✨</div>
-  <div class="float-icon" style="top:15%; left:30%; animation-duration:32s;">🍄</div>
-  <div class="float-icon small" style="top:50%; right:30%; animation-duration:27s;">🍄</div>
-  <div class="float-icon" style="top:40%; right:45%; animation-duration:34s;">🛸</div>
-  <div class="float-icon small" style="top:75%; right:5%; animation-duration:29s;">☄️</div>
-  <div class="float-icon small" style="top:10%; right:35%; animation-duration:31s;">💠</div>
-  <div class="float-icon small" style="top:88%; left:55%; animation-duration:33s;">🌀</div>
-
-  <div class="lang-toggle" onclick="toggleLang()">
-    <span id="langHR">HR</span> | <span id="langEN" style="opacity:0.5;">EN</span>
-  </div>
-
-  <div class="header">
-    <div class="title-main" id="titleMain">DA HOOD ASTRONAUTS</div>
-    <div class="title-sub" id="titleSub">QR PORTAL ENGINE</div>
-    <div class="version-tag">XENOMORPH QR ENGINE</div>
-  </div>
-
-  <div class="wrapper">
-
-    <!-- LEFT: controls -->
-    <div class="panel">
-      <h3 id="panelTitleGenerator">GENERATOR</h3>
-
-      <label id="labelContent">SADRŽAJ QR KODA</label>
-      <textarea id="qrText">https://dahoodcodes.com</textarea>
-
-      <div class="row3">
-        <div>
-          <label id="labelSize">VELIČINA</label>
-          <input type="number" id="qrSize" value="420" min="120" max="1024">
-        </div>
-        <div>
-          <label id="labelMargin">MARGIN</label>
-          <input type="number" id="qrMargin" value="2" min="0" max="10">
-        </div>
-        <div>
-          <label id="labelLevel">ERROR LEVEL</label>
-          <select id="qrLevel">
-            <option value="L">L</option>
-            <option value="M">M</option>
-            <option value="Q">Q</option>
-            <option value="H" selected>H</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- tabs -->
-      <div class="tab-row">
-        <button class="tab-btn active" data-tab="tabDots" id="tabDotsBtn">DOTS</button>
-        <button class="tab-btn" data-tab="tabEyes" id="tabEyesBtn">EYES</button>
-        <button class="tab-btn" data-tab="tabLayout" id="tabLayoutBtn">LAYOUT</button>
-        <button class="tab-btn" data-tab="tabFX" id="tabFXBtn">TRIPPY FX</button>
-        <button class="tab-btn" data-tab="tabLogo" id="tabLogoBtn">LOGO</button>
-        <button class="tab-btn" data-tab="tabBorder" id="tabBorderBtn">BORDER</button>
-      </div>
-
-      <!-- DOTS -->
-      <div class="tab-section active" id="tabDots">
-        <div class="section-label" id="labelDotsTitle">DOT SHAPE</div>
-        <div class="pill-row" id="dotsRow">
-          <div class="pill active" data-dots="square">SQUARE</div>
-          <div class="pill" data-dots="rounded">ROUNDED</div>
-          <div class="pill" data-dots="circle">CIRCLE</div>
-          <div class="pill" data-dots="diamond">DIAMOND</div>
-          <div class="pill" data-dots="star5">STAR</div>
-          <div class="pill" data-dots="hex">HEX</div>
-          <div class="pill" data-dots="shroom">SHROOM</div>
-          <div class="pill" data-dots="alien">ALIEN</div>
-          <div class="pill" data-dots="triup">TRI UP</div>
-          <div class="pill" data-dots="tridown">TRI DOWN</div>
-        </div>
-      </div>
-
-      <!-- EYES -->
-      <div class="tab-section" id="tabEyes">
-        <div class="section-label" id="labelOuterEye">OUTER EYE SHAPE</div>
-        <div class="pill-row" id="outerEyeRow">
-          <div class="pill active" data-outer="square">SQUARE</div>
-          <div class="pill" data-outer="rounded">ROUNDED</div>
-          <div class="pill" data-outer="circle">CIRCLE</div>
-          <div class="pill" data-outer="diamond">DIAMOND</div>
-          <div class="pill" data-outer="alien">ALIEN</div>
-          <div class="pill" data-outer="hex">HEX</div>
-          <div class="pill" data-outer="star">STAR</div>
-        </div>
-
-        <div class="section-label" id="labelInnerEye">INNER PUPIL SHAPE</div>
-        <div class="pill-row" id="innerEyeRow">
-          <div class="pill active" data-inner="square">SQUARE</div>
-          <div class="pill" data-inner="circle">CIRCLE</div>
-          <div class="pill" data-inner="diamond">DIAMOND</div>
-          <div class="pill" data-inner="star">STAR</div>
-          <div class="pill" data-inner="alien">ALIEN</div>
-          <div class="pill" data-inner="shroom">SHROOM</div>
-          <div class="pill" data-inner="rounded">ROUNDED</div>
-        </div>
-      </div>
-
-      <!-- LAYOUT -->
-      <div class="tab-section" id="tabLayout">
-        <div class="section-label" id="labelLayoutTitle">LAYOUT</div>
-        <div class="pill-row" id="layoutRow">
-          <div class="pill active" data-layout="classic">CLASSIC</div>
-          <div class="pill" data-layout="milkyway">MILKYWAY</div>
-          <div class="pill" data-layout="swirl">SWIRL</div>
-          <div class="pill" data-layout="wave">WAVE</div>
-          <div class="pill" data-layout="vortex">VORTEX</div>
-        </div>
-
-        <label id="labelDotDensity">DOT DENSITY</label>
-        <input type="range" id="dotDensity" min="60" max="100" value="100">
-
-        <label id="labelRotation">ROTATION</label>
-        <input type="range" id="layoutRotation" min="-45" max="45" value="0">
-      </div>
-
-      <!-- FX -->
-      <div class="tab-section" id="tabFX">
-        <div class="section-label" id="labelColorTitle">BOJE</div>
-        <div class="row2">
-          <div>
-            <label id="labelColor1">PRIMARNA</label>
-            <input type="color" id="color1" value="#00f5ff">
-          </div>
-          <div>
-            <label id="labelColor2">GRADIENT</label>
-            <input type="color" id="color2" value="#ff4fd8">
-          </div>
-        </div>
-
-        <label id="labelBgColor">POZADINA</label>
-        <input type="color" id="bgColor" value="#000000">
-
-        <div class="section-label" id="labelFXTitle">TRIPPY FX</div>
-        <label id="labelGlow">GLOW</label>
-        <input type="range" id="glow" min="0" max="40" value="16">
-
-        <label id="labelHue">HUE ROTATE</label>
-        <input type="range" id="hue" min="0" max="360" value="0">
-
-        <label id="labelOpacity">OPACITY</label>
-        <input type="range" id="opacity" min="30" max="100" value="100">
-      </div>
-
-      <!-- BORDER -->
-      <div class="tab-section" id="tabBorder">
-        <div class="section-label" id="labelBorderTitle">OBRUB</div>
-
-        <label id="labelBorderWidth">DEBLJINA OBRUBA</label>
-        <input type="range" id="borderWidth" min="0" max="40" value="16">
-
-        <label id="labelBorderRadius">RADIUS OBRUBA</label>
-        <input type="range" id="borderRadius" min="0" max="80" value="24">
-
-        <div class="section-label" id="labelBorderShapeTitle">OBLIK OBRUBA</div>
-        <div class="pill-row" id="borderShapeRow">
-          <div class="pill active" data-bshape="rect">RECT</div>
-          <div class="pill" data-bshape="rounded">ROUNDED</div>
-          <div class="pill" data-bshape="hex">HEX</div>
-          <div class="pill" data-bshape="portal">PORTAL</div>
-        </div>
-      </div>
-
-      <!-- LOGO -->
-      <div class="tab-section" id="tabLogo">
-        <div class="section-label" id="labelLogoTitle">LOGO U SREDINI</div>
-        <input type="file" id="logoInput" accept="image/*">
-        <label id="labelLogoSize">VELIČINA LOGA</label>
-        <input type="range" id="logoSize" min="10" max="60" value="30">
-        <button class="export-btn" id="btnClearLogo">MAKNI LOGO</button>
-      </div>
-
-      <button class="btn-primary" id="btnGenerate">⚡ GENERATE PORTAL</button>
-
-      <div class="export-bar">
-        <button class="export-btn" data-format="png">PNG</button>
-        <button class="export-btn" data-format="jpg">JPG</button>
-        <button class="export-btn" data-format="svg">SVG</button>
-        <button class="export-btn" data-format="copy">COPY</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: QR preview + footer -->
-    <div>
-      <div class="qr-shell">
-        <h3 id="panelTitlePreview">PORTAL</h3>
-        <div class="qr-frame" id="qrFrame">
-          <div id="qrSvgWrapper"></div>
-        </div>
-      </div>
-
-      <div class="octo-footer">
-        <div class="octo-logo"><span>🐙</span></div>
-        <div class="octo-title">ALIEN OCTOPUS</div>
-        <div class="octo-sub" id="octoSub">
-          MASTERMIND • OSNIVAČ • DA HOOD ASTRONAUTS
-        </div>
-        <div class="donate-row">
-          <button class="donate-btn" onclick="window.open('https://m3.aircash.eu/acpay/dariot321')">AIRCASH</button>
-          <button class="donate-btn" onclick="window.open('https://revolut.me/alien_octopus')">REVOLUT</button>
-        </div>
-        <div class="prod-tag">
-          DA HOOD PRODUCTION — DA HOOD ASTRONAUTS
-        </div>
-        <div class="octo-footer-bottom">
-          DA HOOD CODES • XENOMORPH QR ENGINE • FROM THE COSMOS, FOR THE STREETS
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- QRCode.js for matrix generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <script>
-    let currentLang = "HR";
-    let currentDots = "square";
-    let currentOuterEye = "square";
-    let currentInnerEye = "square";
-    let currentLayout = "classic";
-    let currentBorderShape = "rect";
-    let logoDataURL = null;
-
-    function getErrorLevel(level) {
-      return QRCode.CorrectLevel[level] || QRCode.CorrectLevel.H;
-    }
-
-    function createMatrix(text, size, margin, level) {
-      const tempDiv = document.createElement("div");
-      const qr = new QRCode(tempDiv, {
-        text: text || " ",
-        width: size,
-        height: size,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: getErrorLevel(level)
-      });
-      const o = qr._oQRCode;
-      const count = o.getModuleCount();
-      const modules = [];
-      for (let r = 0; r < count; r++) {
-        modules[r] = [];
-        for (let c = 0; c < count; c++) {
-          modules[r][c] = o.isDark(r, c);
-        }
-      }
-      tempDiv.remove();
-      return { modules, count };
-    }
-
-    function dotPath(shape, x, y, s) {
-      const cx = x + s / 2;
-      const cy = y + s / 2;
-      const r = s / 2;
-
-      if (shape === "circle") {
-        return `<circle cx="${cx}" cy="${cy}" r="${r * 0.9}" />`;
-      }
-      if (shape === "rounded") {
-        return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.4}" ry="${s * 0.4}" />`;
-      }
-      if (shape === "diamond") {
-        const p1 = `${cx},${y}`;
-        const p2 = `${x + s},${cy}`;
-        const p3 = `${cx},${y + s}`;
-        const p4 = `${x},${cy}`;
-        return `<polygon points="${p1} ${p2} ${p3} ${p4}" />`;
-      }
-      if (shape === "star5") {
-        const pts = [];
-        const spikes = 5;
-        const outerR = r * 0.95;
-        const innerR = r * 0.45;
-        let rot = Math.PI / 2 * 3;
-        let step = Math.PI / spikes;
-        let x1 = cx;
-        let y1 = cy - outerR;
-        for (let i = 0; i < spikes; i++) {
-          pts.push(`${x1},${y1}`);
-          x1 = cx + Math.cos(rot + step) * innerR;
-          y1 = cy + Math.sin(rot + step) * innerR;
-          pts.push(`${x1},${y1}`);
-          rot += step * 2;
-          x1 = cx + Math.cos(rot) * outerR;
-          y1 = cy + Math.sin(rot) * outerR;
-        }
-        return `<polygon points="${pts.join(" ")}" />`;
-      }
-      if (shape === "hex") {
-        const w = s * 0.95;
-        const h = s * 0.95;
-        const hw = w / 2;
-        const hh = h / 2;
-        const px = cx;
-        const py = cy;
-        const p1 = `${px - hw * 0.5},${py - hh}`;
-        const p2 = `${px + hw * 0.5},${py - hh}`;
-        const p3 = `${px + hw},${py}`;
-        const p4 = `${px + hw * 0.5},${py + hh}`;
-        const p5 = `${px - hw * 0.5},${py + hh}`;
-        const p6 = `${px - hw},${py}`;
-        return `<polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}" />`;
-      }
-      if (shape === "shroom") {
-        const capR = r * 0.95;
-        const stemW = s * 0.35;
-        const stemH = s * 0.45;
-        const stemX = cx - stemW / 2;
-        const stemY = cy;
-        return `
-          <circle cx="${cx}" cy="${cy - s * 0.15}" r="${capR}" />
-          <rect x="${stemX}" y="${stemY}" width="${stemW}" height="${stemH}" rx="${stemW * 0.4}" />
-        `;
-      }
-      if (shape === "alien") {
-        const headW = s * 0.95;
-        const headH = s * 1.1;
-        const headX = cx - headW / 2;
-        const headY = cy - headH / 2;
-        const eyeOffsetX = headW * 0.18;
-        const eyeOffsetY = headH * 0.1;
-        const eyeW = headW * 0.22;
-        const eyeH = headH * 0.28;
-        return `
-          <ellipse cx="${cx}" cy="${cy}" rx="${headW / 2}" ry="${headH / 2}" />
-          <ellipse cx="${cx - eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
-          <ellipse cx="${cx + eyeOffsetX}" cy="${cy - eyeOffsetY}" rx="${eyeW / 2}" ry="${eyeH / 2}" fill="#000000" />
-        `;
-      }
-      if (shape === "triup") {
-        const p1 = `${cx},${y}`;
-        const p2 = `${x + s},${y + s}`;
-        const p3 = `${x},${y + s}`;
-        return `<polygon points="${p1} ${p2} ${p3}" />`;
-      }
-      if (shape === "tridown") {
-        const p1 = `${x},${y}`;
-        const p2 = `${x + s},${y}`;
-        const p3 = `${cx},${y + s}`;
-        return `<polygon points="${p1} ${p2} ${p3}" />`;
-      }
-
-      return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.18}" ry="${s * 0.18}" />`;
-    }
-
-    function eyeOuterPath(shape, x, y, s) {
-      return dotPath(shape, x, y, s);
-    }
-
-    function eyeInnerPath(shape, x, y, s) {
-      const inset = s * 0.3;
-      return dotPath(shape, x + inset, y + inset, s - inset * 2);
-    }
-
-    // layoutOffset sada NE dira matrix (0 pomak) da QR ostane valjan
-    function layoutOffset(layout, r, c, count, moduleSize) {
-      return { dx: 0, dy: 0 };
-    }
-
-    function generateSVG() {
-      const text = document.getElementById("qrText").value.trim();
-      const size = parseInt(document.getElementById("qrSize").value) || 420;
-      const margin = parseInt(document.getElementById("qrMargin").value) || 2;
-      const level = document.getElementById("qrLevel").value || "H";
-
-      const color1 = document.getElementById("color1").value || "#00f5ff";
-      const color2 = document.getElementById("color2").value || "#ff4fd8";
-      const bgColor = document.getElementById("bgColor").value || "#000000";
-
-      const glow = parseInt(document.getElementById("glow").value) || 0;
-      const hue = parseInt(document.getElementById("hue").value) || 0;
-      const opacity = parseInt(document.getElementById("opacity").value) || 100;
-
-      const borderWidth = parseInt(document.getElementById("borderWidth").value) || 0;
-      const borderRadius = parseInt(document.getElementById("borderRadius").value) || 0;
-      const layoutRotation = parseInt(document.getElementById("layoutRotation").value) || 0;
-      const logoSize = parseInt(document.getElementById("logoSize").value) || 30;
-
-      const { modules, count } = createMatrix(text || " ", size, margin, level);
-      const moduleSize = size / (count + margin * 2);
-
-      let svg = "";
-      svg += `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
-      svg += `<defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="${color1}"/>
-          <stop offset="100%" stop-color="${color2}"/>
-        </linearGradient>
-      </defs>`;
-
-      svg += `<rect x="0" y="0" width="${size}" height="${size}" fill="${bgColor}" />`;
-
-      if (borderWidth > 0) {
-        const inset = borderWidth / 2 + 4;
-        if (currentBorderShape === "hex") {
-          const w = size - inset * 2;
-          const h = size - inset * 2;
-          const cx = size / 2;
-          const cy = size / 2;
-          const hw = w / 2;
-          const hh = h / 2;
-          const p1 = `${cx - hw * 0.5},${cy - hh}`;
-          const p2 = `${cx + hw * 0.5},${cy - hh}`;
-          const p3 = `${cx + hw},${cy}`;
-          const p4 = `${cx + hw * 0.5},${cy + hh}`;
-          const p5 = `${cx - hw * 0.5},${cy + hh}`;
-          const p6 = `${cx - hw},${cy}`;
-          svg += `<polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}"
-                   fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}" />`;
-        } else if (currentBorderShape === "portal") {
-          svg += `
-            <rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}"
-              fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}"
-              rx="${borderRadius}" ry="${borderRadius}"
-              filter="url(#portalGlow)" />
-            <defs>
-              <filter id="portalGlow">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
-                <feColorMatrix in="blur" type="matrix"
-                  values="0 0 0 0 0.36
-                          0 0 0 0 1
-                          0 0 0 0 0.9
-                          0 0 0 0.9 0"/>
-              </filter>
-            </defs>
-          `;
-        } else {
-          svg += `<rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}"
-                   fill="none" stroke="url(#grad1)" stroke-width="${borderWidth}"
-                   rx="${currentBorderShape === "rounded" ? borderRadius : 0}"
-                   ry="${currentBorderShape === "rounded" ? borderRadius : 0}" />`;
-        }
-      }
-
-      svg += `<g fill="url(#grad1)">`;
-
-      const eyeSize = moduleSize * 7;
-      const eyePositions = [
-        { r: 0, c: 0 },
-        { r: 0, c: count - 7 },
-        { r: count - 7, c: 0 }
-      ];
-
-      function isInEye(r, c) {
-        for (const e of eyePositions) {
-          if (r >= e.r && r < e.r + 7 && c >= e.c && c < e.c + 7) return true;
-        }
-        return false;
-      }
-
-      // DOT DENSITY slider više ne briše module (da QR ostane valjan)
-      for (let r = 0; r < count; r++) {
-        for (let c = 0; c < count; c++) {
-          if (!modules[r][c]) continue;
-          if (isInEye(r, c)) continue;
-
-          const baseX = (c + margin) * moduleSize;
-          const baseY = (r + margin) * moduleSize;
-
-          const { dx, dy } = layoutOffset(currentLayout, r, c, count, moduleSize);
-          const x = baseX + dx;
-          const y = baseY + dy;
-
-          svg += dotPath(currentDots, x, y, moduleSize);
-        }
-      }
-
-      for (const e of eyePositions) {
-        const ex = (e.c + margin) * moduleSize;
-        const ey = (e.r + margin) * moduleSize;
-        svg += eyeOuterPath(currentOuterEye, ex, ey, eyeSize);
-        svg += eyeInnerPath(currentInnerEye, ex, ey, eyeSize);
-      }
-
-      svg += `</g>`;
-
-      if (logoDataURL) {
-        const logoW = (logoSize / 100) * size;
-        const logoH = logoW;
-        const lx = (size - logoW) / 2;
-        const ly = (size - logoH) / 2;
-        svg += `<image href="${logoDataURL}" x="${lx}" y="${ly}" width="${logoW}" height="${logoH}" preserveAspectRatio="xMidYMid slice" />`;
-      }
-
-      svg += `</svg>`;
-
-      const wrapper = document.getElementById("qrSvgWrapper");
-      wrapper.innerHTML = svg;
-      wrapper.style.filter = `hue-rotate(${hue}deg)`;
-      wrapper.style.opacity = (opacity / 100).toString();
-      wrapper.style.transform = `rotate(${layoutRotation}deg)`;
-
-      const frame = document.getElementById("qrFrame");
-      frame.style.boxShadow =
-        glow > 0
-          ? `0 0 ${glow}px rgba(92, 249, 255, 0.7), 0 0 ${glow * 1.4}px rgba(255, 79, 216, 0.6)`
-          : "none";
-    }
-
-    document.getElementById("btnGenerate").addEventListener("click", generateSVG);
-    document.getElementById("qrText").addEventListener("input", generateSVG);
-    document.getElementById("color1").addEventListener("input", generateSVG);
-    document.getElementById("color2").addEventListener("input", generateSVG);
-    document.getElementById("bgColor").addEventListener("input", generateSVG);
-    document.getElementById("qrSize").addEventListener("change", generateSVG);
-    document.getElementById("qrMargin").addEventListener("change", generateSVG);
-    document.getElementById("qrLevel").addEventListener("change", generateSVG);
-    document.getElementById("glow").addEventListener("input", generateSVG);
-    document.getElementById("hue").addEventListener("input", generateSVG);
-    document.getElementById("opacity").addEventListener("input", generateSVG);
-    document.getElementById("borderWidth").addEventListener("input", generateSVG);
-    document.getElementById("borderRadius").addEventListener("input", generateSVG);
-    document.getElementById("dotDensity").addEventListener("input", generateSVG);
-    document.getElementById("layoutRotation").addEventListener("input", generateSVG);
-    document.getElementById("logoSize").addEventListener("input", generateSVG);
-
-    document.querySelectorAll(".pill").forEach(p => {
-      p.addEventListener("click", () => {
-        const dDots = p.getAttribute("data-dots");
-        const dOuter = p.getAttribute("data-outer");
-        const dInner = p.getAttribute("data-inner");
-        const dLayout = p.getAttribute("data-layout");
-        const dBshape = p.getAttribute("data-bshape");
-
-        if (dDots) {
-          document.querySelectorAll("#dotsRow .pill").forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          currentDots = dDots;
-        }
-        if (dOuter) {
-          document.querySelectorAll("#outerEyeRow .pill").forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          currentOuterEye = dOuter;
-        }
-        if (dInner) {
-          document.querySelectorAll("#innerEyeRow .pill").forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          currentInnerEye = dInner;
-        }
-        if (dLayout) {
-          document.querySelectorAll("#layoutRow .pill").forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          currentLayout = dLayout;
-        }
-        if (dBshape) {
-          document.querySelectorAll("#borderShapeRow .pill").forEach(x => x.classList.remove("active"));
-          p.classList.add("active");
-          currentBorderShape = dBshape;
-        }
-        generateSVG();
-      });
-    });
-
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const tab = btn.getAttribute("data-tab");
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
-        document.getElementById(tab).classList.add("active");
-      });
-    });
-
-    document.querySelectorAll(".export-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const format = btn.getAttribute("data-format");
-        const wrapper = document.getElementById("qrSvgWrapper");
-        const svgEl = wrapper.querySelector("svg");
-        if (!svgEl) return;
-
-        const serializer = new XMLSerializer();
-        const svgStr = serializer.serializeToString(svgEl);
-
-        if (format === "svg") {
-          const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "da-hood-portal.svg";
-          a.click();
-          URL.revokeObjectURL(url);
-          return;
-        }
-
-        const img = new Image();
-        const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
-        const url = URL.createObjectURL(svgBlob);
-        img.onload = function () {
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-          URL.revokeObjectURL(url);
-
-          if (format === "png" || format === "jpg") {
-            const mime = format === "png" ? "image/png" : "image/jpeg";
-            const dataURL = canvas.toDataURL(mime);
-            const a = document.createElement("a");
-            a.href = dataURL;
-            a.download = `da-hood-portal.${format}`;
-            a.click();
-          } else if (format === "copy") {
-            canvas.toBlob(blob => {
-              if (navigator.clipboard && navigator.clipboard.write) {
-                const item = new ClipboardItem({ [blob.type]: blob });
-                navigator.clipboard.write([item]).catch(() => {});
-              }
-            });
-          }
-        };
-        img.src = url;
-      });
-    });
-
-    document.getElementById("logoInput").addEventListener("change", e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        logoDataURL = ev.target.result;
-        generateSVG();
-      };
-      reader.readAsDataURL(file);
-    });
-
-    document.getElementById("btnClearLogo").addEventListener("click", () => {
-      logoDataURL = null;
-      document.getElementById("logoInput").value = "";
-      generateSVG();
-    });
-
-    function toggleLang() {
-      const hr = document.getElementById("langHR");
-      const en = document.getElementById("langEN");
-      const isHR = currentLang === "HR";
-      currentLang = isHR ? "EN" : "HR";
-
-      if (currentLang === "EN") {
-        hr.style.opacity = "0.5";
-        en.style.opacity = "1";
-
-        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
-        document.getElementById("panelTitlePreview").innerText = "PORTAL";
-        document.getElementById("labelContent").innerText = "QR CONTENT";
-        document.getElementById("labelSize").innerText = "SIZE";
-        document.getElementById("labelMargin").innerText = "MARGIN";
-        document.getElementById("labelLevel").innerText = "ERROR LEVEL";
-
-        document.getElementById("labelDotsTitle").innerText = "DOT SHAPE";
-        document.getElementById("labelOuterEye").innerText = "OUTER EYE SHAPE";
-        document.getElementById("labelInnerEye").innerText = "INNER PUPIL SHAPE";
-        document.getElementById("labelLayoutTitle").innerText = "LAYOUT";
-        document.getElementById("labelDotDensity").innerText = "DOT DENSITY";
-        document.getElementById("labelRotation").innerText = "ROTATION";
-        document.getElementById("labelColorTitle").innerText = "COLORS";
-        document.getElementById("labelColor1").innerText = "PRIMARY";
-        document.getElementById("labelColor2").innerText = "GRADIENT";
-        document.getElementById("labelBgColor").innerText = "BACKGROUND";
-        document.getElementById("labelFXTitle").innerText = "TRIPPY FX";
-        document.getElementById("labelGlow").innerText = "GLOW";
-        document.getElementById("labelHue").innerText = "HUE ROTATE";
-        document.getElementById("labelOpacity").innerText = "OPACITY";
-        document.getElementById("labelBorderTitle").innerText = "BORDER";
-        document.getElementById("labelBorderWidth").innerText = "BORDER WIDTH";
-        document.getElementById("labelBorderRadius").innerText = "BORDER RADIUS";
-        document.getElementById("labelBorderShapeTitle").innerText = "BORDER SHAPE";
-        document.getElementById("labelLogoTitle").innerText = "CENTER LOGO";
-        document.getElementById("labelLogoSize").innerText = "LOGO SIZE";
-
-        document.getElementById("octoSub").innerText =
-          "MASTERMIND • FOUNDER • DA HOOD ASTRONAUTS";
-      } else {
-        hr.style.opacity = "1";
-        en.style.opacity = "0.5";
-
-        document.getElementById("panelTitleGenerator").innerText = "GENERATOR";
-        document.getElementById("panelTitlePreview").innerText = "PORTAL";
-        document.getElementById("labelContent").innerText = "SADRŽAJ QR KODA";
-        document.getElementById("labelSize").innerText = "VELIČINA";
-        document.getElementById("labelMargin").innerText = "MARGIN";
-        document.getElementById("labelLevel").innerText = "ERROR LEVEL";
-
-        document.getElementById("labelDotsTitle").innerText = "DOT SHAPE";
-        document.getElementById("labelOuterEye").innerText = "OUTER EYE SHAPE";
-        document.getElementById("labelInnerEye").innerText = "INNER PUPIL SHAPE";
-        document.getElementById("labelLayoutTitle").innerText = "LAYOUT";
-        document.getElementById("labelDotDensity").innerText = "DOT DENSITY";
-        document.getElementById("labelRotation").innerText = "ROTATION";
-        document.getElementById("labelColorTitle").innerText = "BOJE";
-        document.getElementById("labelColor1").innerText = "PRIMARNA";
-        document.getElementById("labelColor2").innerText = "GRADIENT";
-        document.getElementById("labelBgColor").innerText = "POZADINA";
-        document.getElementById("labelFXTitle").innerText = "TRIPPY FX";
-        document.getElementById("labelGlow").innerText = "GLOW";
-        document.getElementById("labelHue").innerText = "HUE ROTATE";
-        document.getElementById("labelOpacity").innerText = "OPACITY";
-        document.getElementById("labelBorderTitle").innerText = "OBRUB";
-        document.getElementById("labelBorderWidth").innerText = "DEBLJINA OBRUBA";
-        document.getElementById("labelBorderRadius").innerText = "RADIUS OBRUBA";
-        document.getElementById("labelBorderShapeTitle").innerText = "OBLIK OBRUBA";
-        document.getElementById("labelLogoTitle").innerText = "LOGO U SREDINI";
-        document.getElementById("labelLogoSize").innerText = "VELIČINA LOGA";
-
-        document.getElementById("octoSub").innerText =
-          "MASTERMIND • OSNIVAČ • DA HOOD ASTRONAUTS";
-      }
-    }
-
-    generateSVG();
-  </script>
-
-</body>
-</html>
+    .color-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
